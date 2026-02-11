@@ -1,22 +1,39 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Serve the existing logo at the exact referenced static asset path",
+  "title": "Remove header and footer logos",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Ensure the uploaded logo is present in frontend public assets at the exact path referenced by header and footer so it renders without broken images.",
+      "summary": "Remove the header logo image while preserving header branding text and navigation behavior.",
       "acceptanceCriteria": [
-        "The file `frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png` exists in the repo and matches the uploaded image content (no edits such as transparency/background removal).",
-        "Loading the app shows the logo image rendered in the header logo square (SiteHeader) with no broken image icon.",
-        "Loading the app shows the logo image rendered in the footer logo square (SiteFooter) with no broken image icon.",
-        "The `<img>` `src` remains `/assets/generated/blaines-card-clinic-logo.dim_512x512.png` in both header and footer (no change to a different path)."
+        "The header no longer renders the image `assets/generated/blaines-card-clinic-logo.dim_512x512.png`.",
+        "The header still displays the site name text and the desktop/mobile navigation works as before.",
+        "No layout regressions: header height/spacing looks intentional on mobile and desktop.",
+        "No console errors/warnings caused by unused imports or missing assets (e.g., remove `assetUrl` import from `SiteHeader.tsx` if no longer needed)."
       ],
       "file_operations": [
         {
-          "path": "frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png",
-          "operation": "create",
-          "description": "Add/overwrite the logo PNG at this exact path so it is served at `/assets/generated/blaines-card-clinic-logo.dim_512x512.png`. Use the user-uploaded image content as-is (keep white background; do not crop/recolor or add transparency)."
+          "path": "frontend/src/components/SiteHeader.tsx",
+          "operation": "modify",
+          "description": "Remove the header logo <img> block that references assets/generated/blaines-card-clinic-logo.dim_512x512.png, keep the site name text and existing desktop/mobile navigation and scroll behavior unchanged, and adjust spacing (e.g., container gap/alignment) so header height/spacing remains intentional without the logo. Remove now-unused imports such as assetUrl to avoid console/lint warnings."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Remove the footer logo image while preserving footer branding text, quick links, and social links.",
+      "acceptanceCriteria": [
+        "The footer no longer renders the image `assets/generated/blaines-card-clinic-logo.dim_512x512.png`.",
+        "Footer text content, quick links scrolling behavior, and existing social links remain present and functional.",
+        "No layout regressions: footer branding area aligns cleanly without the logo image.",
+        "No console errors/warnings caused by unused imports or missing assets (e.g., remove `assetUrl` import from `SiteFooter.tsx` if no longer needed)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/SiteFooter.tsx",
+          "operation": "modify",
+          "description": "Remove the footer logo <img> block that references assets/generated/blaines-card-clinic-logo.dim_512x512.png while keeping the footer brand text, description paragraph, quick links (scrollIntoView behavior), and existing social URLs/links intact. Adjust alignment/spacing of the brand row so it looks clean without the logo. Remove now-unused imports such as assetUrl to avoid console/lint warnings."
         }
       ]
     }

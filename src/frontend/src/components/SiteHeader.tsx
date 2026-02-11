@@ -38,14 +38,8 @@ export function SiteHeader() {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between gap-4">
-          {/* Logo and Brand */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="logo-square w-14 h-14">
-              <img
-                src="/assets/generated/blaines-card-clinic-logo.dim_512x512.png"
-                alt="Blaine's Card Clinic"
-              />
-            </div>
+          {/* Brand */}
+          <div className="flex items-center shrink-0">
             <div className="flex flex-col">
               <span className="text-xl font-bold text-foreground tracking-tight">
                 Blaine's Card Clinic

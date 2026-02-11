@@ -1,24 +1,35 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T21:45:05.557Z",
+  "generatedAt": "2026-02-11T22:25:48.875Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
-    "implemented": 1,
+    "total": 2,
+    "implemented": 2,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Add the user-uploaded logo image file to the frontend static assets so it is served at the exact path `/assets/generated/blaines-card-clinic-logo.dim_512x512.png` (i.e., place/overwrite the file at `frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png`) without modifying the image content (keep the white background; do not make it transparent).",
+        "summary": "Remove the logo image from the top header so that no logo graphic is shown at the top of the screen (keep the rest of the header content and navigation working).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png"
+          "frontend/src/components/SiteHeader.tsx"
         ],
         "matchedFiles": [
-          "frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png"
+          "frontend/src/components/SiteHeader.tsx"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Remove the logo image from the footer so that no logo graphic is shown at the bottom of the screen (keep the rest of the footer content, quick links, and social links intact).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/SiteFooter.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/SiteFooter.tsx"
         ]
       }
     ]
@@ -28,7 +39,8 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png",
+    "frontend/src/components/SiteFooter.tsx",
+    "frontend/src/components/SiteHeader.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

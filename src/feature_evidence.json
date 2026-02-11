@@ -2,9 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-the-user-uploaded-logo-image-file-to-the-frontend-static-assets-so-it-is-served-at-the-exact-path-assets-generated-blaines-card-clinic-logo-dim-512x512-png-i-e-place-overwrite-the-file-at-frontend-public-assets-generated-blaines-card-clinic-logo-dim-512x512-png-without-modifying-the-image-content-keep-the-white-background-do-not-make-it-transparent",
-      "featureTitle": "Add the user-uploaded logo image file to the frontend static assets so it is served at the exact path `/assets/generated/blaines-card-clinic-logo.dim_512x512.png` (i.e., place/overwrite the file at `frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png`) without modifying the image content (keep the white background; do not make it transparent).",
-      "files": [],
+      "featureId": "feature-remove-the-logo-image-from-the-top-header-so-that-no-logo-graphic-is-shown-at-the-top-of-the-screen-keep-the-rest-of-the-header-content-and-navigation-working",
+      "featureTitle": "Remove the logo image from the top header so that no logo graphic is shown at the top of the screen (keep the rest of the header content and navigation working).",
+      "files": [
+        "frontend/src/components/SiteHeader.tsx"
+      ],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
@@ -14,6 +16,24 @@
       ],
       "testIds": [
         "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-remove-the-logo-image-from-the-footer-so-that-no-logo-graphic-is-shown-at-the-bottom-of-the-screen-keep-the-rest-of-the-footer-content-quick-links-and-social-links-intact",
+      "featureTitle": "Remove the logo image from the footer so that no logo graphic is shown at the bottom of the screen (keep the rest of the footer content, quick links, and social links intact).",
+      "files": [
+        "frontend/src/components/SiteFooter.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
       ],
       "confidence": "high"
     }

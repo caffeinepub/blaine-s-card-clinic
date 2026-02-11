@@ -1,39 +1,68 @@
 {
   "kind": "build_request",
-  "title": "Fix logo not displaying by placing uploaded logo asset at the referenced path",
-  "priority": "high",
+  "title": "Remove header and footer logos",
+  "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add the user-uploaded logo image file to the frontend static assets so it is served at the exact path `/assets/generated/blaines-card-clinic-logo.dim_512x512.png` (i.e., place/overwrite the file at `frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png`) without modifying the image content (keep the white background; do not make it transparent).",
+      "text": "Remove the logo image from the top header so that no logo graphic is shown at the top of the screen (keep the rest of the header content and navigation working).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-msg-user-yes"
+          "msg-4"
         ],
         "quotes": [
-          "Yes"
+          "Can you please remove the logo at the top of the screen and the bottom?"
         ]
       },
       "acceptanceCriteria": [
-        "The file `frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png` exists in the repo and matches the uploaded image content (no edits such as transparency/background removal).",
-        "Loading the app shows the logo image rendered in the header logo square (SiteHeader) with no broken image icon.",
-        "Loading the app shows the logo image rendered in the footer logo square (SiteFooter) with no broken image icon.",
-        "The `<img>` `src` remains `/assets/generated/blaines-card-clinic-logo.dim_512x512.png` in both header and footer (no change to a different path)."
+        "The header no longer renders the image `assets/generated/blaines-card-clinic-logo.dim_512x512.png`.",
+        "The header still displays the site name text and the desktop/mobile navigation works as before.",
+        "No layout regressions: header height/spacing looks intentional on mobile and desktop.",
+        "No console errors/warnings caused by unused imports or missing assets (e.g., remove `assetUrl` import from `SiteHeader.tsx` if no longer needed)."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Remove the logo image from the footer so that no logo graphic is shown at the bottom of the screen (keep the rest of the footer content, quick links, and social links intact).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Can you please remove the logo at the top of the screen and the bottom?"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The footer no longer renders the image `assets/generated/blaines-card-clinic-logo.dim_512x512.png`.",
+        "Footer text content, quick links scrolling behavior, and existing social links remain present and functional.",
+        "No layout regressions: footer branding area aligns cleanly without the logo image.",
+        "No console errors/warnings caused by unused imports or missing assets (e.g., remove `assetUrl` import from `SiteFooter.tsx` if no longer needed)."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under `frontend/src/components/ui` (read-only).",
-    "Do not change the referenced logo path `/assets/generated/blaines-card-clinic-logo.dim_512x512.png`.",
-    "Do not alter the uploaded logo image (no cropping, recoloring, or transparency/background changes)."
+    "Frontend immutable paths must not be edited: `frontend/src/hooks/useInternetIdentity.ts`, `frontend/src/hooks/useInternetIdentity.tsx`, `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`, `frontend/src/components/ui`.",
+    "Do not add new backend services; backend remains a single Motoko actor."
   ],
   "nonGoals": [
-    "Redesigning the site layout, colors, or typography beyond what is necessary to fix the missing logo.",
-    "Changing the logo sizing/fit behavior (object-fit) unless required to address the missing-image issue."
+    "Do not change the TikTok, Instagram, or Facebook URLs in the footer.",
+    "Do not redesign the overall site theme or typography beyond what is necessary to remove the logo images cleanly.",
+    "Do not remove the site name text unless explicitly requested."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

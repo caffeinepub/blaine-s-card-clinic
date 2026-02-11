@@ -1,4 +1,4 @@
-import { SiX, SiFacebook, SiInstagram } from 'react-icons/si';
+import { SiTiktok, SiFacebook, SiInstagram } from 'react-icons/si';
 import { Heart } from 'lucide-react';
 
 export function SiteFooter() {
@@ -13,13 +13,7 @@ export function SiteFooter() {
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           {/* Brand */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="logo-square w-12 h-12">
-                <img
-                  src="/assets/generated/blaines-card-clinic-logo.dim_512x512.png"
-                  alt="Blaine's Card Clinic"
-                />
-              </div>
+            <div className="flex items-center">
               <span className="text-lg font-bold">Blaine's Card Clinic</span>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -83,21 +77,27 @@ export function SiteFooter() {
             <h3 className="text-sm font-semibold uppercase tracking-wider">Connect With Us</h3>
             <div className="flex gap-4">
               <a
-                href="#"
+                href="https://www.facebook.com/share/1BRkn9xHpT/?mibextid=wwXIfr"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
                 aria-label="Facebook"
               >
                 <SiFacebook className="h-5 w-5" />
               </a>
               <a
-                href="#"
+                href="https://www.tiktok.com/@blainescardclinic?_r=1&_t=ZP-93qKaFCVw5P"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
-                aria-label="X (Twitter)"
+                aria-label="TikTok"
               >
-                <SiX className="h-5 w-5" />
+                <SiTiktok className="h-5 w-5" />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/blainescardclinic?igsh=MXhkczIxMTJhMmpmZg=="
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
                 aria-label="Instagram"
               >

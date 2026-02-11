@@ -3,22 +3,35 @@
   "projectStateVersion": 3,
   "summary": "New project",
   "architectural_notes": [],
-  "known_issues": [
-    "Logo image not displaying in the logo box (likely incorrect asset path/reference handling in Vite: public vs src/assets import)."
-  ],
-  "isFixRequest": true,
+  "known_issues": [],
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-the-user-uploaded-logo-image-file-to-the-frontend-static-assets-so-it-is-served-at-the-exact-path-assets-generated-blaines-card-clinic-logo-dim-512x512-png-i-e-place-overwrite-the-file-at-frontend-public-assets-generated-blaines-card-clinic-logo-dim-512x512-png-without-modifying-the-image-content-keep-the-white-background-do-not-make-it-transparent",
-      "title": "Add the user-uploaded logo image file to the frontend static assets so it is served at the exact path `/assets/generated/blaines-card-clinic-logo.dim_512x512.png` (i.e., place/overwrite the file at `frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png`) without modifying the image content (keep the white background; do not make it transparent).",
+      "id": "feature-remove-the-logo-image-from-the-top-header-so-that-no-logo-graphic-is-shown-at-the-top-of-the-screen-keep-the-rest-of-the-header-content-and-navigation-working",
+      "title": "Remove the logo image from the top header so that no logo graphic is shown at the top of the screen (keep the rest of the header content and navigation working).",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-remove-the-logo-image-from-the-footer-so-that-no-logo-graphic-is-shown-at-the-bottom-of-the-screen-keep-the-rest-of-the-footer-content-quick-links-and-social-links-intact",
+      "title": "Remove the logo image from the footer so that no logo graphic is shown at the bottom of the screen (keep the rest of the footer content, quick links, and social links intact).",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
     }
   ],
-  "new_feature_requests": [],
-  "projectName": "Fix logo not displaying by placing uploaded logo asset at the referenced path",
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Remove the logo from the top of the screen and from the bottom/footer",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Remove header and footer logos",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

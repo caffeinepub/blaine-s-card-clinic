@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Sparkles, Shield, Award } from 'lucide-react';
+import { assetUrl } from '@/lib/assetUrl';
 
 export function HeroSection() {
   const scrollToContact = () => {
@@ -33,7 +34,7 @@ export function HeroSection() {
       {/* Hero Image Background */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/assets/generated/hero-card-restoration.dim_1600x900.png"
+          src={assetUrl('assets/generated/hero-card-restoration.dim_1600x900.png')}
           alt="Card Restoration"
           className="w-full h-full object-cover opacity-20"
         />

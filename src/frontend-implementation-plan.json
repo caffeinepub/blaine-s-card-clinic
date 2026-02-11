@@ -1,37 +1,22 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Square, non-overlapping logo rendering in header and footer",
+  "title": "Serve the existing logo at the exact referenced static asset path",
   "requirements": [
     {
-      "id": "REQ-10",
-      "summary": "Ensure header and footer logos render in a true square, preserve aspect ratio, and never visually include/overlap navigation/tab UI while continuing to use the existing logo asset path.",
+      "id": "REQ-1",
+      "summary": "Ensure the uploaded logo is present in frontend public assets at the exact path referenced by header and footer so it renders without broken images.",
       "acceptanceCriteria": [
-        "In the SiteHeader, the logo renders within a square box and preserves its aspect ratio (no horizontal/vertical stretching).",
-        "In the SiteFooter, the logo renders within a square box and preserves its aspect ratio (no horizontal/vertical stretching).",
-        "On common viewport widths (mobile and desktop), the navigation buttons do not overlap the logo, and no tab-like UI elements appear inside the logo area.",
-        "The logo continues to load from the existing static path: /assets/generated/blaines-card-clinic-logo.dim_512x512.png."
+        "The file `frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png` exists in the repo and matches the uploaded image content (no edits such as transparency/background removal).",
+        "Loading the app shows the logo image rendered in the header logo square (SiteHeader) with no broken image icon.",
+        "Loading the app shows the logo image rendered in the footer logo square (SiteFooter) with no broken image icon.",
+        "The `<img>` `src` remains `/assets/generated/blaines-card-clinic-logo.dim_512x512.png` in both header and footer (no change to a different path)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Add a reusable logo wrapper utility/class (square box, overflow hidden, consistent sizing) to enforce square rendering and prevent any visual bleed; keep styling changes within existing global styling entry points."
-        },
-        {
-          "path": "frontend/src/components/SiteHeader.tsx",
-          "operation": "modify",
-          "description": "Wrap the logo image in a dedicated square container (using the new shared class) and ensure layout spacing prevents any nav/tab elements from visually overlapping the logo area across breakpoints; continue using src=\"/assets/generated/blaines-card-clinic-logo.dim_512x512.png\"."
-        },
-        {
-          "path": "frontend/src/components/SiteFooter.tsx",
-          "operation": "modify",
-          "description": "Wrap the logo image in the same dedicated square container (using the shared class) and keep the image object-fit behavior so it preserves aspect ratio; continue using src=\"/assets/generated/blaines-card-clinic-logo.dim_512x512.png\"."
-        },
-        {
           "path": "frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png",
-          "operation": "modify",
-          "description": "Replace the existing image content with the cropped/resized true-square version (same filename/path) so no extra padding or header-tab-like artifacts are present: frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png."
+          "operation": "create",
+          "description": "Add/overwrite the logo PNG at this exact path so it is served at `/assets/generated/blaines-card-clinic-logo.dim_512x512.png`. Use the user-uploaded image content as-is (keep white background; do not crop/recolor or add transparency)."
         }
       ]
     }

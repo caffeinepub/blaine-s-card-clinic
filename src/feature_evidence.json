@@ -2,13 +2,9 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-header-and-footer-logo-rendering-so-the-logo-always-appears-as-a-true-square-no-stretching-expansion-and-does-not-visually-include-overlay-any-navigation-tabs-or-header-elements",
-      "featureTitle": "Update the header and footer logo rendering so the logo always appears as a true square (no stretching/expansion) and does not visually include/overlay any navigation tabs or header elements.",
-      "files": [
-        "frontend/src/components/SiteFooter.tsx",
-        "frontend/src/components/SiteHeader.tsx",
-        "frontend/src/index.css"
-      ],
+      "featureId": "feature-add-the-user-uploaded-logo-image-file-to-the-frontend-static-assets-so-it-is-served-at-the-exact-path-assets-generated-blaines-card-clinic-logo-dim-512x512-png-i-e-place-overwrite-the-file-at-frontend-public-assets-generated-blaines-card-clinic-logo-dim-512x512-png-without-modifying-the-image-content-keep-the-white-background-do-not-make-it-transparent",
+      "featureTitle": "Add the user-uploaded logo image file to the frontend static assets so it is served at the exact path `/assets/generated/blaines-card-clinic-logo.dim_512x512.png` (i.e., place/overwrite the file at `frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png`) without modifying the image content (keep the white background; do not make it transparent).",
+      "files": [],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
@@ -17,7 +13,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-10"
+        "REQ-1"
       ],
       "confidence": "high"
     }

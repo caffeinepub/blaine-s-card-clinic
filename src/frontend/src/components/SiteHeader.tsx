@@ -40,7 +40,7 @@ export function SiteHeader() {
         <div className="flex h-20 items-center justify-between gap-4">
           {/* Logo and Brand */}
           <div className="flex items-center gap-3 shrink-0">
-            <div className="logo-square w-12 h-12">
+            <div className="logo-square w-14 h-14">
               <img
                 src="/assets/generated/blaines-card-clinic-logo.dim_512x512.png"
                 alt="Blaine's Card Clinic"

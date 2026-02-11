@@ -101,11 +101,13 @@
         text-wrap: balance;
     }
     
-    /* Square logo container utility */
+    /* Square logo container utility with theme background */
     .logo-square {
         position: relative;
         overflow: hidden;
         flex-shrink: 0;
+        background-color: oklch(var(--background));
+        border-radius: 0.25rem;
     }
     
     .logo-square::before {

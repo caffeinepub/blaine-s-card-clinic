@@ -1,12 +1,10 @@
 # Specification
 
 ## Summary
-**Goal:** Ensure the site logo displays as a true square (no stretching/expanded look) in the header and footer, without overlapping or visually including navigation/tab elements.
+**Goal:** Fix the missing logo by ensuring the uploaded logo image is served from the exact path the app already references.
 
 **Planned changes:**
-- Update `SiteHeader` logo container styling so the logo is constrained to a square box and preserves aspect ratio.
-- Update `SiteFooter` logo container styling so the logo is constrained to a square box and preserves aspect ratio.
-- Adjust header layout/spacing as needed so navigation buttons don’t overlap the logo across common mobile and desktop widths.
-- Keep the logo source path unchanged: `/assets/generated/blaines-card-clinic-logo.dim_512x512.png`.
+- Add/overwrite the logo file at `frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png` using the uploaded image asset, without modifying the image content.
+- Verify the header (SiteHeader) and footer (SiteFooter) continue referencing `/assets/generated/blaines-card-clinic-logo.dim_512x512.png` and render without a broken image.
 
-**User-visible outcome:** The logo appears as a clean, true square in both header and footer, with no stretching and no nav/tab elements overlapping or appearing inside the logo area.
+**User-visible outcome:** The logo displays correctly in both the header and footer logo squares, with no broken image icon.

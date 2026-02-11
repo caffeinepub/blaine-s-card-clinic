@@ -14,7 +14,7 @@ export function SiteFooter() {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="logo-square w-10 h-10">
+              <div className="logo-square w-12 h-12">
                 <img
                   src="/assets/generated/blaines-card-clinic-logo.dim_512x512.png"
                   alt="Blaine's Card Clinic"

@@ -1,50 +1,39 @@
 {
   "kind": "build_request",
-  "title": "Make the site logo render as a true square (no stretched/expanded tabs)",
-  "priority": "normal",
+  "title": "Fix logo not displaying by placing uploaded logo asset at the referenced path",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-10",
-      "text": "Update the header and footer logo rendering so the logo always appears as a true square (no stretching/expansion) and does not visually include/overlay any navigation tabs or header elements.",
+      "id": "REQ-1",
+      "text": "Add the user-uploaded logo image file to the frontend static assets so it is served at the exact path `/assets/generated/blaines-card-clinic-logo.dim_512x512.png` (i.e., place/overwrite the file at `frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png`) without modifying the image content (keep the white background; do not make it transparent).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "recent-msg-user-yes"
         ],
         "quotes": [
-          "Just make the logo the square, it looks like the image has been expanded and now has the tabs in the logo."
+          "Yes"
         ]
       },
       "acceptanceCriteria": [
-        "In the SiteHeader, the logo renders within a square box and preserves its aspect ratio (no horizontal/vertical stretching).",
-        "In the SiteFooter, the logo renders within a square box and preserves its aspect ratio (no horizontal/vertical stretching).",
-        "On common viewport widths (mobile and desktop), the navigation buttons do not overlap the logo, and no tab-like UI elements appear inside the logo area.",
-        "The logo continues to load from the existing static path: /assets/generated/blaines-card-clinic-logo.dim_512x512.png."
+        "The file `frontend/public/assets/generated/blaines-card-clinic-logo.dim_512x512.png` exists in the repo and matches the uploaded image content (no edits such as transparency/background removal).",
+        "Loading the app shows the logo image rendered in the header logo square (SiteHeader) with no broken image icon.",
+        "Loading the app shows the logo image rendered in the footer logo square (SiteFooter) with no broken image icon.",
+        "The `<img>` `src` remains `/assets/generated/blaines-card-clinic-logo.dim_512x512.png` in both header and footer (no change to a different path)."
       ]
     }
   ],
   "constraints": [
-    "Do not edit any files under frontend/src/components/ui or any other paths listed in frontend.immutablePaths.",
-    "Keep using the existing logo filename and URL path: /assets/generated/blaines-card-clinic-logo.dim_512x512.png."
+    "Do not edit files under `frontend/src/components/ui` (read-only).",
+    "Do not change the referenced logo path `/assets/generated/blaines-card-clinic-logo.dim_512x512.png`.",
+    "Do not alter the uploaded logo image (no cropping, recoloring, or transparency/background changes)."
   ],
   "nonGoals": [
-    "Changing the site navigation structure or labels.",
-    "Replacing the logo with a different filename/path."
+    "Redesigning the site layout, colors, or typography beyond what is necessary to fix the missing logo.",
+    "Changing the logo sizing/fit behavior (object-fit) unless required to address the missing-image issue."
   ],
   "imageRequirements": {
     "required": [],
-    "edits": [
-      "Crop/resize the logo to a clean, true square and remove any extra padding/expanded area that makes it look like header tabs are part of the image (blaines-card-clinic-logo.dim_512x512.png > blaines-card-clinic-logo.dim_512x512.png)"
-    ]
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
+    "edits": []
   }
 }

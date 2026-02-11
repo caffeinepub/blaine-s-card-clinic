@@ -1,0 +1,42 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-11T20:44:03.020Z",
+  "summary": "REQ-10 is largely implemented by wrapping header and footer logos in a new square container utility (.logo-square) with object-fit: contain and by keeping the existing logo asset path. However, the BuildRequest also calls for cropping/resizing the actual logo image to remove padding/tab-like artifacts, and there is no evidence in the diff summary of any asset/image modification.",
+  "missing_requirements": [
+    {
+      "id": "REQ-10",
+      "requirement": "Crop/resize the existing logo image (same filename/path) to a clean true square and remove any extra padding/expanded area that makes it look like header tabs are part of the image.",
+      "reason": "The diff shows only CSS/layout changes for rendering the logo in a square container; no static asset change is shown for /assets/generated/blaines-card-clinic-logo.dim_512x512.png, and no image file modifications are listed.",
+      "evidence": [
+        "frontend/src/components/SiteHeader.tsx",
+        "frontend/src/components/SiteFooter.tsx",
+        "frontend/src/index.css"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Site-wide color/theme overhaul (updating Tailwind/OKLCH variables such as --primary, --background, etc.) beyond logo square rendering.",
+      "reason": "BuildRequest only asks to fix logo rendering (square, no stretching/overlap) and keep the same asset path; it does not request a palette/theme change.",
+      "evidence": [
+        "frontend/src/index.css"
+      ]
+    },
+    {
+      "description": "Documentation claims that HeroSection, ServiceTiersSection, and ContactFormSection were updated to use a new red primary color.",
+      "reason": "Those updates are not requested by the BuildRequest, and they are not supported by the modified-files list (only header/footer/index.css/etc. are shown as modified). This appears to be an unrequested/unsupported summary entry.",
+      "evidence": [
+        "frontend-file-summaries.txt"
+      ]
+    }
+  ],
+  "confidence": 0.72,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/components/SiteFooter.tsx",
+    "frontend/src/components/SiteHeader.tsx",
+    "frontend/src/index.css",
+    "project_state.json"
+  ]
+}

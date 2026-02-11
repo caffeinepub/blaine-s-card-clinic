@@ -1,0 +1,11 @@
+{
+  "frontend/src/App.tsx": "Main application component that renders the complete single-page marketing site with header, hero, service tiers, contact form, and footer sections.",
+  "frontend/src/components/SiteHeader.tsx": "Sticky header component with logo wrapped in square container, business name, responsive navigation menu, and smooth scroll functionality; logo now renders in a constrained square box with proper spacing to prevent overlap with navigation elements.",
+  "frontend/src/components/HeroSection.tsx": "Hero section featuring the banner image, headline, call-to-action buttons, and feature highlights; updated to use the new red primary color for CTAs and accent elements.",
+  "frontend/src/components/ServiceTiersSection.tsx": "Service tiers section displaying three restoration packages with pricing cards; updated to use the new red primary color for badges, highlights, and CTAs.",
+  "frontend/src/components/ContactFormSection.tsx": "Contact form component with validation, loading states, success confirmation, and backend integration; updated to use the new red primary color for buttons and success states.",
+  "frontend/src/components/SiteFooter.tsx": "Footer component with branding (logo in square container), quick links, social media icons, and required caffeine.ai attribution; logo now renders in a constrained square box preserving aspect ratio.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for backend integration, specifically handling contact form submission mutations.",
+  "frontend/src/index.css": "Global styles with OKLCH color system defining a vibrant red and white palette; includes new .logo-square utility class that enforces true square aspect ratio with overflow hidden to prevent visual artifacts.",
+  "frontend/tailwind.config.js": "Tailwind configuration with custom color tokens, typography (Inter/Merriweather), border radius, shadows, and animations."
+}

@@ -1,0 +1,140 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 9,
+  "summary": "Website for Blaine’s Card Clinic offering TCG card cleaning and dent removal services with three restoration tiers, updated branding to match the provided logo, plus customer order status tracking and an owner/admin workflow to update order statuses, and a simple service-request contact form.",
+  "architectural_notes": [
+    "Use the user-provided logo image as a static asset and derive/align the site color palette with the logo colors."
+  ],
+  "known_issues": [
+    "Previous build attempt failed with 'AI struggled with your request'; may need to implement changes in smaller steps (logo/theme update first, then order tracking + admin).",
+    "Logo renders as missing image (white box with blue question mark), likely due to incorrect logo asset path (/assets/generated/...)",
+    "Services navigation/button does not work (Services link/tab broken)",
+    "Logo appears stretched/expanded (not square); header tabs look like they are inside/overlaid on the logo image"
+  ],
+  "isFixRequest": true,
+  "imageRequirements": "## Edit Images\n- Crop/resize the logo to a clean, true square and remove any extra padding/expanded area that makes it look like header tabs are part of the image (blaines-card-clinic-logo.dim_512x512.png > blaines-card-clinic-logo.dim_512x512.png)",
+  "existing_features": [
+    {
+      "id": "feature-create-a-responsive-marketing-website-for-blaine-s-card-clinic-focused-on-tcg-card-cleaning-and-dent-removal-with-clear-navigation-and-sections-for-overview-services-pricing-tiers-and-contact",
+      "title": "Create a responsive marketing website for “Blaine’s Card Clinic” focused on TCG card cleaning and dent removal, with clear navigation and sections for overview, services, pricing/tiers, and contact.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-dedicated-service-tiers-section-that-lists-exactly-three-tiers-with-the-provided-names-and-descriptions-1-super-potion-professional-restoration-surface-care-presentation-enhancement-2-hyper-potion-advanced-recovery-includes-creases-dents-and-dings-3-max-potion-comprehensive-restoration-and-microscopic-level-precision",
+      "title": "Add a dedicated “Service Tiers” section that lists exactly three tiers with the provided names and descriptions: (1) Super Potion — “Professional Restoration Surface Care & Presentation Enhancement”, (2) Hyper Potion — “Advanced Recovery, Includes Creases, Dents, and Dings”, (3) Max Potion — “Comprehensive Restoration and Microscopic Level Precision”.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-contact-request-a-quote-form-that-lets-a-visitor-submit-their-name-email-and-a-message-describing-the-cards-issues-e-g-creases-dents-dings-and-submit-it-to-the-backend-for-storage",
+      "title": "Implement a “Contact / Request a Quote” form that lets a visitor submit their name, email, and a message describing the cards/issues (e.g., creases, dents, dings) and submit it to the backend for storage.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-and-apply-a-cohesive-visual-theme-for-the-site-colors-typography-spacing-components-that-fits-a-card-restoration-clinic-brand-and-is-used-consistently-across-all-sections-avoid-default-unstyled-template-look",
+      "title": "Create and apply a cohesive visual theme for the site (colors, typography, spacing, components) that fits a “card restoration clinic” brand and is used consistently across all sections; avoid default/unstyled template look.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-required-generated-images-as-static-assets-under-frontend-public-assets-generated-and-render-them-in-the-ui-e-g-logo-in-header-hero-image-in-the-top-section-without-routing-images-through-the-backend",
+      "title": "Add the required generated images as static assets under frontend/public/assets/generated and render them in the UI (e.g., logo in header, hero image in the top section) without routing images through the backend.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-current-site-logo-asset-with-the-user-uploaded-logo-image-so-the-header-and-footer-logo-render-the-uploaded-design-at-the-existing-logo-path-assets-generated-blaines-card-clinic-logo-dim-512x512-png",
+      "title": "Replace the current site logo asset with the user-uploaded logo image so the header and footer logo render the uploaded design at the existing logo path (/assets/generated/blaines-card-clinic-logo.dim_512x512.png).",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-site-color-theme-to-better-match-the-uploaded-red-and-white-logo-by-adjusting-the-tailwind-css-theme-variables-primary-accent-ring-destructive-and-supporting-neutrals-used-across-components-keeping-text-contrast-accessible-in-both-light-and-dark-modes",
+      "title": "Update the site color theme to better match the uploaded red-and-white logo by adjusting the Tailwind CSS theme variables (primary, accent, ring, destructive, and supporting neutrals) used across components, keeping text contrast accessible in both light and dark modes.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-site-logo-loads-correctly-by-guaranteeing-the-logo-file-exists-at-the-exact-static-path-assets-generated-blaines-card-clinic-logo-dim-512x512-png-and-is-served-from-frontend-public-assets-generated-in-the-deployed-build-no-broken-image-blue-question-mark-placeholder",
+      "title": "Ensure the site logo loads correctly by guaranteeing the logo file exists at the exact static path `/assets/generated/blaines-card-clinic-logo.dim_512x512.png` and is served from `frontend/public/assets/generated/` in the deployed build (no broken-image/blue-question-mark placeholder).",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-currently-deployed-logo-asset-at-assets-generated-blaines-card-clinic-logo-dim-512x512-png-with-the-newly-uploaded-logo-image-img-8094-2-png-keeping-the-filename-used-by-the-ui-unchanged",
+      "title": "Replace the currently deployed logo asset at `/assets/generated/blaines-card-clinic-logo.dim_512x512.png` with the newly uploaded logo image (IMG_8094-2.png), keeping the filename used by the UI unchanged.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-header-and-footer-logo-rendering-so-the-logo-always-appears-as-a-true-square-no-stretching-expansion-and-does-not-visually-include-overlay-any-navigation-tabs-or-header-elements",
+      "title": "Update the header and footer logo rendering so the logo always appears as a true square (no stretching/expansion) and does not visually include/overlay any navigation tabs or header elements.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create marketing/service website for TCG card cleaning and dent removal business (Blaine’s Card Clinic)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add service tiers and descriptions: Super Potion (Professional Restoration Surface Care & Presentation Enhancement), Hyper Potion (Advanced Recovery incl. creases/dents/dings), Max Potion (Comprehensive Restoration & microscopic-level precision)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Replace the site logo with the user-provided logo image and update the site color scheme/theme to match the logo",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add customer order tracking: a page where customers can enter an identifier (e.g., email) to view their order/service status",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Add owner/admin capability to update order status for customer orders",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Add a simple contact/service-request form for visitors to submit name, email, and message",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Blaine’s Card Clinic",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

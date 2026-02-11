@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.5rem;
+        /* Clean white background */
+        --background: 1.0 0.0 0;
+        --foreground: 0.20 0.01 20;
+        /* Bright red primary matching logo */
+        --card: 0.99 0.005 0;
+        --card-foreground: 0.20 0.01 20;
+        --popover: 0.99 0.005 0;
+        --popover-foreground: 0.20 0.01 20;
+        /* Vibrant red for primary actions - matches logo */
+        --primary: 0.55 0.22 25;
+        --primary-foreground: 1.0 0.0 0;
+        /* Light gray secondary */
+        --secondary: 0.96 0.005 240;
+        --secondary-foreground: 0.25 0.01 20;
+        /* Muted gray */
+        --muted: 0.96 0.005 240;
+        --muted-foreground: 0.50 0.01 240;
+        /* Red accent */
+        --accent: 0.60 0.20 25;
+        --accent-foreground: 1.0 0.0 0;
+        /* Destructive red */
+        --destructive: 0.55 0.22 25;
+        --destructive-foreground: 1.0 0.0 0;
+        /* Borders and inputs */
+        --border: 0.90 0.005 240;
+        --input: 0.90 0.005 240;
+        --ring: 0.55 0.22 25;
+        /* Success green */
+        --success: 0.60 0.15 150;
+        --success-foreground: 1.0 0.0 0;
+    }
+
+    .dark {
+        /* Dark background */
+        --background: 0.15 0.01 240;
+        --foreground: 0.98 0.005 0;
+        /* Slightly lighter card */
+        --card: 0.18 0.01 240;
+        --card-foreground: 0.98 0.005 0;
+        --popover: 0.18 0.01 240;
+        --popover-foreground: 0.98 0.005 0;
+        /* Lighter red for dark mode */
+        --primary: 0.65 0.24 25;
+        --primary-foreground: 0.15 0.01 240;
+        /* Gray secondary */
+        --secondary: 0.25 0.01 240;
+        --secondary-foreground: 0.98 0.005 0;
+        /* Muted dark */
+        --muted: 0.25 0.01 240;
+        --muted-foreground: 0.65 0.01 240;
+        /* Bright red accent */
+        --accent: 0.65 0.24 25;
+        --accent-foreground: 0.15 0.01 240;
+        /* Destructive */
+        --destructive: 0.60 0.24 25;
+        --destructive-foreground: 0.98 0.005 0;
+        /* Borders */
+        --border: 0.25 0.01 240;
+        --input: 0.25 0.01 240;
+        --ring: 0.65 0.24 25;
+        /* Success */
+        --success: 0.65 0.18 150;
+        --success-foreground: 0.15 0.01 240;
+    }
+
+    * {
+        @apply border-border;
+    }
+    
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: "rlig" 1, "calt" 1;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-semibold tracking-tight;
+    }
+    
+    h1 {
+        @apply text-4xl md:text-5xl lg:text-6xl;
+    }
+    
+    h2 {
+        @apply text-3xl md:text-4xl lg:text-5xl;
+    }
+    
+    h3 {
+        @apply text-2xl md:text-3xl;
+    }
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+    
+    /* Square logo container utility */
+    .logo-square {
+        position: relative;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+    
+    .logo-square::before {
+        content: '';
+        display: block;
+        padding-bottom: 100%; /* 1:1 aspect ratio */
+    }
+    
+    .logo-square img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+    }
+}

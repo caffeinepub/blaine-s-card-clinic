@@ -1,0 +1,25 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-update-the-header-and-footer-logo-rendering-so-the-logo-always-appears-as-a-true-square-no-stretching-expansion-and-does-not-visually-include-overlay-any-navigation-tabs-or-header-elements",
+      "featureTitle": "Update the header and footer logo rendering so the logo always appears as a true square (no stretching/expansion) and does not visually include/overlay any navigation tabs or header elements.",
+      "files": [
+        "frontend/src/components/SiteFooter.tsx",
+        "frontend/src/components/SiteHeader.tsx",
+        "frontend/src/index.css"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-10"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

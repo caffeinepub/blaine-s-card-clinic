@@ -1,55 +1,34 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T22:41:56.818Z",
+  "generatedAt": "2026-02-11T23:24:35.615Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 2,
+    "total": 1,
+    "implemented": 0,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Rename all user-facing UI text that currently says \"Track Package\" to instead say \"Track Order\", including navigation, hero CTA button, footer quick link, and the Track section headings/titles/descriptions.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/SiteHeader.tsx",
-          "frontend/src/components/HeroSection.tsx",
-          "frontend/src/components/SiteFooter.tsx",
-          "frontend/src/components/TrackPackageSection.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/SiteHeader.tsx",
-          "frontend/src/components/HeroSection.tsx",
-          "frontend/src/components/SiteFooter.tsx",
-          "frontend/src/components/TrackPackageSection.tsx"
-        ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Reorder the homepage sections so that the Pricing section is immediately followed by the \"Get Your Free Quote\" / \"Request a Quote\" form section, and the Track Order section appears beneath the Free Quote section.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/App.tsx"
-        ]
+        "summary": "Update the Motoko backend to automatically grant the caller administrative permissions the first time they authenticate, so the user’s current Internet Identity can access the admin dashboard without any manual principal entry.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/components/HeroSection.tsx",
-    "frontend/src/components/SiteFooter.tsx",
-    "frontend/src/components/SiteHeader.tsx",
-    "frontend/src/components/TrackPackageSection.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

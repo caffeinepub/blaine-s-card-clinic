@@ -1,46 +1,4 @@
 {
   "kind": "feature_evidence_report",
-  "features": [
-    {
-      "featureId": "feature-rename-all-user-facing-ui-text-that-currently-says-track-package-to-instead-say-track-order-including-navigation-hero-cta-button-footer-quick-link-and-the-track-section-headings-titles-descriptions",
-      "featureTitle": "Rename all user-facing UI text that currently says \"Track Package\" to instead say \"Track Order\", including navigation, hero CTA button, footer quick link, and the Track section headings/titles/descriptions.",
-      "files": [
-        "frontend/src/components/HeroSection.tsx",
-        "frontend/src/components/SiteFooter.tsx",
-        "frontend/src/components/SiteHeader.tsx",
-        "frontend/src/components/TrackPackageSection.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-reorder-the-homepage-sections-so-that-the-pricing-section-is-immediately-followed-by-the-get-your-free-quote-request-a-quote-form-section-and-the-track-order-section-appears-beneath-the-free-quote-section",
-      "featureTitle": "Reorder the homepage sections so that the Pricing section is immediately followed by the \"Get Your Free Quote\" / \"Request a Quote\" form section, and the Track Order section appears beneath the Free Quote section.",
-      "files": [
-        "frontend/src/App.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    }
-  ]
+  "features": []
 }

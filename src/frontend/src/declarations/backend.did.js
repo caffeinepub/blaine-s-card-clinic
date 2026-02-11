@@ -13,6 +13,11 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
+export const OrderStatus = IDL.Variant({
+  'shipped' : IDL.Null,
+  'delivered' : IDL.Null,
+  'processing' : IDL.Null,
+});
 export const UserProfile = IDL.Record({
   'name' : IDL.Text,
   'email' : IDL.Text,
@@ -38,10 +43,23 @@ export const idlService = IDL.Service({
   'addCategory' : IDL.Func([IDL.Text, IDL.Text], [], []),
   'addRestorationStep' : IDL.Func([IDL.Text, IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'bootstrap' : IDL.Func([], [], []),
+  'checkTrackingNumberStatus' : IDL.Func([IDL.Text], [OrderStatus], ['query']),
   'completeRestorationStep' : IDL.Func([IDL.Text, IDL.Nat], [], []),
+  'createOrder' : IDL.Func([IDL.Text], [OrderStatus], []),
   'createTrackingState' : IDL.Func([IDL.Text, IDL.Text], [], []),
+  'examineTrackingNumbers' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(IDL.Text, OrderStatus))],
+      ['query'],
+    ),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getTrackingNumbers' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(IDL.Text, OrderStatus))],
+      ['query'],
+    ),
   'getTrackingState' : IDL.Func(
       [IDL.Text],
       [IDL.Opt(TrackingStateView)],
@@ -59,6 +77,11 @@ export const idlService = IDL.Service({
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'submitContactForm' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
   'updateTicketStatus' : IDL.Func([IDL.Text, IDL.Bool], [], []),
+  'updateTrackingNumberStatus' : IDL.Func(
+      [IDL.Text, OrderStatus],
+      [OrderStatus],
+      [],
+    ),
 });
 
 export const idlInitArgs = [];
@@ -68,6 +91,11 @@ export const idlFactory = ({ IDL }) => {
     'admin' : IDL.Null,
     'user' : IDL.Null,
     'guest' : IDL.Null,
+  });
+  const OrderStatus = IDL.Variant({
+    'shipped' : IDL.Null,
+    'delivered' : IDL.Null,
+    'processing' : IDL.Null,
   });
   const UserProfile = IDL.Record({ 'name' : IDL.Text, 'email' : IDL.Text });
   const Time = IDL.Int;
@@ -91,10 +119,27 @@ export const idlFactory = ({ IDL }) => {
     'addCategory' : IDL.Func([IDL.Text, IDL.Text], [], []),
     'addRestorationStep' : IDL.Func([IDL.Text, IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'bootstrap' : IDL.Func([], [], []),
+    'checkTrackingNumberStatus' : IDL.Func(
+        [IDL.Text],
+        [OrderStatus],
+        ['query'],
+      ),
     'completeRestorationStep' : IDL.Func([IDL.Text, IDL.Nat], [], []),
+    'createOrder' : IDL.Func([IDL.Text], [OrderStatus], []),
     'createTrackingState' : IDL.Func([IDL.Text, IDL.Text], [], []),
+    'examineTrackingNumbers' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Text, OrderStatus))],
+        ['query'],
+      ),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getTrackingNumbers' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Text, OrderStatus))],
+        ['query'],
+      ),
     'getTrackingState' : IDL.Func(
         [IDL.Text],
         [IDL.Opt(TrackingStateView)],
@@ -112,6 +157,11 @@ export const idlFactory = ({ IDL }) => {
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'submitContactForm' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
     'updateTicketStatus' : IDL.Func([IDL.Text, IDL.Bool], [], []),
+    'updateTrackingNumberStatus' : IDL.Func(
+        [IDL.Text, OrderStatus],
+        [OrderStatus],
+        [],
+      ),
   });
 };
 

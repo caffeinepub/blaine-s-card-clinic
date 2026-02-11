@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Shield } from 'lucide-react';
+import { assetUrl } from '@/lib/assetUrl';
+import { LoginButton } from './LoginButton';
+import { useCheckIsAdmin } from '@/hooks/useAdminOrderQueries';
+import { useInternetIdentity } from '@/hooks/useInternetIdentity';
 
 export function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { identity } = useInternetIdentity();
+  const { data: isAdmin } = useCheckIsAdmin();
+
+  const isAuthenticated = !!identity;
+  const showAdminLink = isAuthenticated && isAdmin;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,7 +48,12 @@ export function SiteHeader() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between gap-4">
           {/* Brand */}
-          <div className="flex items-center shrink-0">
+          <div className="flex items-center gap-3 shrink-0">
+            <img 
+              src={assetUrl('assets/IMG_8094-6.png')}
+              alt="Blaine's Card Clinic Logo"
+              className="logo-square h-12 w-12 sm:h-14 sm:w-14"
+            />
             <div className="flex flex-col">
               <span className="text-xl font-bold text-foreground tracking-tight">
                 Blaine's Card Clinic
@@ -73,12 +87,23 @@ export function SiteHeader() {
             >
               Pricing
             </Button>
+            {showAdminLink && (
+              <Button
+                variant="ghost"
+                onClick={() => scrollToSection('admin')}
+                className="text-foreground hover:text-primary"
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                Admin
+              </Button>
+            )}
             <Button
               onClick={() => scrollToSection('contact')}
               className="ml-2 bg-primary text-primary-foreground hover:bg-primary/90"
             >
               Get a Quote
             </Button>
+            <LoginButton />
           </nav>
 
           {/* Mobile Menu Button */}
@@ -116,12 +141,25 @@ export function SiteHeader() {
               >
                 Pricing
               </Button>
+              {showAdminLink && (
+                <Button
+                  variant="ghost"
+                  onClick={() => scrollToSection('admin')}
+                  className="justify-start text-foreground hover:text-primary"
+                >
+                  <Shield className="h-4 w-4 mr-2" />
+                  Admin
+                </Button>
+              )}
               <Button
                 onClick={() => scrollToSection('contact')}
                 className="justify-start bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 Get a Quote
               </Button>
+              <div className="pt-2">
+                <LoginButton />
+              </div>
             </div>
           </nav>
         )}

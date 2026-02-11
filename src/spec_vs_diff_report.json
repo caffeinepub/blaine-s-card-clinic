@@ -1,65 +1,38 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T22:41:56.814Z",
-  "summary": "REQ-1 and REQ-2 appear implemented: user-facing labels are updated to “Track Order” in header/hero/footer and the tracking section headline/title is updated; homepage section order is Pricing -> Free Quote -> Track section with scroll targets still pointing to the tracking section. However, the diff also includes several unrelated UI/style/pricing changes that were not requested and may violate stated non-goals (e.g., pricing tier changes).",
-  "missing_requirements": [],
-  "hallucinated_features": [
+  "generatedAt": "2026-02-11T23:24:35.612Z",
+  "summary": "The diff adds an auto-initialization helper in the Motoko backend that initializes the access-control state on first non-anonymous shared call, and adds a manual `bootstrap()` method. However, based on the visible truncated diff, the bootstrap-to-admin behavior may not reliably occur at the time the UI checks admin access (especially for query-based authorization checks), and the initialization flag is `transient`, so the “only once” safety may not persist across upgrades/redeploys.",
+  "missing_requirements": [
     {
-      "description": "Changes to pricing tiers/turnaround times/features in the ServiceTiersSection.",
-      "reason": "BuildRequest explicitly states as a non-goal: “Do not change pricing tiers or quote form fields/validation logic.” The diff summary indicates pricing tier content was updated.",
+      "id": "REQ-1",
+      "requirement": "Automatically grant the caller administrative permissions the first time they authenticate so their current Internet Identity can access the admin dashboard without manual principal entry, while keeping checks enforced for non-admins and making the bootstrap safe against repeated use.",
+      "reason": "The implementation shown only calls `ensureInitialized(caller)` from some **shared** methods (e.g., `saveCallerUserProfile`, `submitContactForm`, `updateTicketStatus`). The admin gating for at least one **query** (`getUserProfile`) checks `AccessControl.isAdmin(...)` without any visible initialization step, so a first-time authenticated user navigating to admin (often driven by query calls / admin checks) may still see “Access Denied” until they hit a specific shared endpoint that triggers initialization. Additionally, `initialized` is declared `transient`, so the “only applies once / only when no admin set” safety may not hold across canister upgrades/restarts, potentially re-enabling bootstrap unexpectedly.",
       "evidence": [
-        "frontend-file-summaries.txt (ServiceTiersSection summary)"
-      ]
-    },
-    {
-      "description": "Global theme/color palette updates (new OKLCH red/white palette) and button/success color changes in the contact form.",
-      "reason": "Not requested by REQ-1/REQ-2; scope was only renaming “Track Package” to “Track Order” and reordering sections.",
-      "evidence": [
-        "frontend-file-summaries.txt (index.css summary)",
-        "frontend-file-summaries.txt (ContactFormSection summary)"
-      ]
-    },
-    {
-      "description": "Logo sizing/cropping behavior changes via .logo-square updates.",
-      "reason": "Not requested by REQ-1/REQ-2; unrelated to renaming/reordering.",
-      "evidence": [
-        "frontend-file-summaries.txt (index.css summary)"
-      ]
-    },
-    {
-      "description": "Added/updated base-path-aware static asset URL helper (assetUrl) and updated hero to use it; plus introduction/reference of a new logo asset.",
-      "reason": "Not requested by REQ-1/REQ-2; unrelated to renaming/reordering.",
-      "evidence": [
-        "frontend/src/components/HeroSection.tsx",
-        "frontend-file-summaries.txt (assetUrl.ts summary)",
-        "frontend-file-summaries.txt (logo asset summary)"
-      ]
-    },
-    {
-      "description": "Tailwind configuration updates (custom tokens, typography, animations, etc.).",
-      "reason": "Not requested by REQ-1/REQ-2; unrelated to renaming/reordering.",
-      "evidence": [
-        "frontend-file-summaries.txt (frontend/tailwind.config.js summary)"
-      ]
-    },
-    {
-      "description": "Expanded/altered tracking UI functionality and additional tracking/query hooks (useTrackingQueries) beyond simple renaming/reordering.",
-      "reason": "Not requested; non-goals include not changing backend tracking behavior. While the diff summary can’t prove backend behavior changed, it does show new/expanded frontend tracking logic not required to satisfy REQ-1/REQ-2.",
-      "evidence": [
-        "frontend-file-summaries.txt (TrackPackageSection summary)",
-        "frontend-file-summaries.txt (useTrackingQueries.ts summary)"
+        "backend/main.mo"
       ]
     }
   ],
-  "confidence": 0.7,
+  "hallucinated_features": [
+    {
+      "description": "Adds a publicly callable `bootstrap()` method intended to be called once on deployment to initialize admin.",
+      "reason": "REQ-1 asks for automatic granting on first authentication, not for a manual initialization endpoint.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Updates project metadata/state tracking in `project_state.json` (e.g., adds/keeps AR-1/AR-2 entries and marks them pending).",
+      "reason": "BuildRequest is specifically about backend bootstrap behavior; no requirement mentions modifying project tracking JSON.",
+      "evidence": [
+        "project_state.json"
+      ]
+    }
+  ],
+  "confidence": 0.62,
   "changed_files": [
+    "backend/main.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
-    "frontend/src/components/HeroSection.tsx",
-    "frontend/src/components/SiteFooter.tsx",
-    "frontend/src/components/SiteHeader.tsx",
-    "frontend/src/components/TrackPackageSection.tsx",
     "project_state.json"
   ]
 }

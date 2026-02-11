@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Sparkles, Shield, Award } from 'lucide-react';
+import { Sparkles, Shield } from 'lucide-react';
 import { assetUrl } from '@/lib/assetUrl';
 
 export function HeroSection() {
@@ -76,7 +76,7 @@ export function HeroSection() {
           </div>
 
           {/* Feature Highlights */}
-          <div className="grid md:grid-cols-3 gap-6 pt-12">
+          <div className="grid md:grid-cols-2 gap-6 pt-12 max-w-2xl mx-auto">
             <div className="flex flex-col items-center gap-3 p-6 rounded-lg bg-card/50 backdrop-blur-sm border">
               <div className="p-3 rounded-full bg-primary/10">
                 <Sparkles className="h-6 w-6 text-primary" />
@@ -94,16 +94,6 @@ export function HeroSection() {
               <h3 className="font-semibold">Safe & Secure</h3>
               <p className="text-sm text-muted-foreground text-center">
                 Your valuable cards are handled with the utmost care
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center gap-3 p-6 rounded-lg bg-card/50 backdrop-blur-sm border">
-              <div className="p-3 rounded-full bg-primary/10">
-                <Award className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="font-semibold">Quality Guaranteed</h3>
-              <p className="text-sm text-muted-foreground text-center">
-                Satisfaction guaranteed or your money back
               </p>
             </div>
           </div>

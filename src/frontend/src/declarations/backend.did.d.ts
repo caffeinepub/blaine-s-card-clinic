@@ -10,6 +10,9 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export type OrderStatus = { 'shipped' : null } |
+  { 'delivered' : null } |
+  { 'processing' : null };
 export interface RestorationStep {
   'completed' : boolean,
   'description' : string,
@@ -34,10 +37,15 @@ export interface _SERVICE {
   'addCategory' : ActorMethod<[string, string], undefined>,
   'addRestorationStep' : ActorMethod<[string, string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'bootstrap' : ActorMethod<[], undefined>,
+  'checkTrackingNumberStatus' : ActorMethod<[string], OrderStatus>,
   'completeRestorationStep' : ActorMethod<[string, bigint], undefined>,
+  'createOrder' : ActorMethod<[string], OrderStatus>,
   'createTrackingState' : ActorMethod<[string, string], undefined>,
+  'examineTrackingNumbers' : ActorMethod<[], Array<[string, OrderStatus]>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getTrackingNumbers' : ActorMethod<[], Array<[string, OrderStatus]>>,
   'getTrackingState' : ActorMethod<[string], [] | [TrackingStateView]>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
@@ -47,6 +55,10 @@ export interface _SERVICE {
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'submitContactForm' : ActorMethod<[string, string, string], undefined>,
   'updateTicketStatus' : ActorMethod<[string, boolean], undefined>,
+  'updateTrackingNumberStatus' : ActorMethod<
+    [string, OrderStatus],
+    OrderStatus
+  >,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

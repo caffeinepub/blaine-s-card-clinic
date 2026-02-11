@@ -8,10 +8,14 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Package, PackageCheck, Truck, CheckCircle2, Clock, AlertCircle } from 'lucide-react';
 import { useTrackPackage } from '@/hooks/useTrackingQueries';
+import { OrderStatus } from '../backend';
 
 export function TrackPackageSection() {
   const [trackingCode, setTrackingCode] = useState('');
-  const { mutate: trackPackage, data: trackingData, isPending, isError, error, reset } = useTrackPackage();
+  const { mutate: trackPackage, data: trackingResult, isPending, isError, error, reset } = useTrackPackage();
+
+  const trackingData = trackingResult?.trackingState;
+  const orderStatus = trackingResult?.orderStatus;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,6 +55,34 @@ export function TrackPackageSection() {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const getOrderStatusBadge = (status: OrderStatus) => {
+    switch (status) {
+      case OrderStatus.processing:
+        return (
+          <Badge variant="secondary" className="text-sm">
+            <Clock className="h-3 w-3 mr-1" />
+            Processing
+          </Badge>
+        );
+      case OrderStatus.shipped:
+        return (
+          <Badge variant="default" className="bg-blue-600 text-sm">
+            <Truck className="h-3 w-3 mr-1" />
+            Shipped
+          </Badge>
+        );
+      case OrderStatus.delivered:
+        return (
+          <Badge variant="default" className="bg-green-600 text-sm">
+            <CheckCircle2 className="h-3 w-3 mr-1" />
+            Delivered
+          </Badge>
+        );
+      default:
+        return <Badge variant="outline">{status}</Badge>;
+    }
   };
 
   return (
@@ -110,14 +142,14 @@ export function TrackPackageSection() {
               )}
 
               {/* Tracking Results */}
-              {trackingData && (
+              {trackingResult && (
                 <div className="space-y-6 animate-fade-in">
                   {/* Header with Reset */}
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-lg font-semibold">Order Status</h3>
                       <p className="text-sm text-muted-foreground">
-                        Tracking Code: <span className="font-mono">{trackingData.trackingCode}</span>
+                        Tracking Code: <span className="font-mono">{trackingCode}</span>
                       </p>
                     </div>
                     <Button variant="outline" size="sm" onClick={handleReset}>
@@ -125,118 +157,133 @@ export function TrackPackageSection() {
                     </Button>
                   </div>
 
-                  {/* Progress Bar */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Progress</span>
-                      <span className="font-medium">{getProgressPercentage()}%</span>
-                    </div>
-                    <Progress value={getProgressPercentage()} className="h-2" />
-                  </div>
-
-                  {/* Status Timeline */}
-                  <div className="space-y-4">
-                    {/* Arrival Status */}
-                    <div className="flex items-start gap-4 p-4 rounded-lg border bg-card">
-                      <div className={`p-2 rounded-full ${trackingData.arrived ? 'bg-primary/10' : 'bg-muted'}`}>
-                        <Package className={`h-5 w-5 ${trackingData.arrived ? 'text-primary' : 'text-muted-foreground'}`} />
-                      </div>
+                  {/* Order Status Badge */}
+                  {orderStatus && (
+                    <div className="flex items-center gap-2 p-4 rounded-lg border bg-card">
+                      <Package className="h-5 w-5 text-primary" />
                       <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-semibold">Order Received</h4>
-                          {trackingData.arrived && (
-                            <Badge variant="default" className="bg-primary">
-                              <CheckCircle2 className="h-3 w-3 mr-1" />
-                              Complete
-                            </Badge>
-                          )}
-                          {!trackingData.arrived && (
-                            <Badge variant="secondary">
-                              <Clock className="h-3 w-3 mr-1" />
-                              Pending
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {trackingData.arrived 
-                            ? 'Your cards have been received at our facility'
-                            : 'Waiting for your cards to arrive'}
-                        </p>
+                        <p className="text-sm font-medium">Current Order Status</p>
                       </div>
+                      {getOrderStatusBadge(orderStatus)}
                     </div>
+                  )}
 
-                    {/* Restoration Steps */}
-                    <div className="flex items-start gap-4 p-4 rounded-lg border bg-card">
-                      <div className={`p-2 rounded-full ${trackingData.steps.some(s => s.completed) ? 'bg-primary/10' : 'bg-muted'}`}>
-                        <PackageCheck className={`h-5 w-5 ${trackingData.steps.some(s => s.completed) ? 'text-primary' : 'text-muted-foreground'}`} />
-                      </div>
-                      <div className="flex-1 space-y-3">
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-semibold">Restoration Process</h4>
-                          <Badge variant="outline">
-                            {trackingData.restorationLevel}
-                          </Badge>
+                  {/* Progress Bar (only if tracking data exists) */}
+                  {trackingData && (
+                    <>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Restoration Progress</span>
+                          <span className="font-medium">{getProgressPercentage()}%</span>
                         </div>
-                        
-                        {trackingData.steps.length > 0 ? (
-                          <div className="space-y-2">
-                            {trackingData.steps.map((step, index) => (
-                              <div key={index} className="flex items-start gap-2 text-sm">
-                                {step.completed ? (
-                                  <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
-                                ) : (
-                                  <Clock className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
-                                )}
-                                <div className="flex-1">
-                                  <p className={step.completed ? 'text-foreground' : 'text-muted-foreground'}>
-                                    {step.description}
-                                  </p>
-                                  {step.completed && (
-                                    <p className="text-xs text-muted-foreground">
-                                      {formatTimestamp(step.timestamp)}
-                                    </p>
-                                  )}
-                                </div>
-                              </div>
-                            ))}
+                        <Progress value={getProgressPercentage()} className="h-2" />
+                      </div>
+
+                      {/* Status Timeline */}
+                      <div className="space-y-4">
+                        {/* Arrival Status */}
+                        <div className="flex items-start gap-4 p-4 rounded-lg border bg-card">
+                          <div className={`p-2 rounded-full ${trackingData.arrived ? 'bg-primary/10' : 'bg-muted'}`}>
+                            <Package className={`h-5 w-5 ${trackingData.arrived ? 'text-primary' : 'text-muted-foreground'}`} />
                           </div>
-                        ) : (
-                          <p className="text-sm text-muted-foreground">
-                            Restoration steps will appear here once work begins
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Shipping Status */}
-                    <div className="flex items-start gap-4 p-4 rounded-lg border bg-card">
-                      <div className={`p-2 rounded-full ${trackingData.shipped ? 'bg-primary/10' : 'bg-muted'}`}>
-                        <Truck className={`h-5 w-5 ${trackingData.shipped ? 'text-primary' : 'text-muted-foreground'}`} />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-semibold">Shipped</h4>
-                          {trackingData.shipped && (
-                            <Badge variant="default" className="bg-primary">
-                              <CheckCircle2 className="h-3 w-3 mr-1" />
-                              Complete
-                            </Badge>
-                          )}
-                          {!trackingData.shipped && (
-                            <Badge variant="secondary">
-                              <Clock className="h-3 w-3 mr-1" />
-                              Pending
-                            </Badge>
-                          )}
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-semibold">Order Received</h4>
+                              {trackingData.arrived && (
+                                <Badge variant="default" className="bg-primary">
+                                  <CheckCircle2 className="h-3 w-3 mr-1" />
+                                  Complete
+                                </Badge>
+                              )}
+                              {!trackingData.arrived && (
+                                <Badge variant="secondary">
+                                  <Clock className="h-3 w-3 mr-1" />
+                                  Pending
+                                </Badge>
+                              )}
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {trackingData.arrived 
+                                ? 'Your cards have been received at our facility'
+                                : 'Waiting for your cards to arrive'}
+                            </p>
+                          </div>
                         </div>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {trackingData.shipped && trackingData.shippingTimestamp
-                            ? `Shipped on ${formatTimestamp(trackingData.shippingTimestamp)}`
-                            : 'Your cards will be shipped once restoration is complete'}
-                        </p>
+
+                        {/* Restoration Steps */}
+                        <div className="flex items-start gap-4 p-4 rounded-lg border bg-card">
+                          <div className={`p-2 rounded-full ${trackingData.steps.some(s => s.completed) ? 'bg-primary/10' : 'bg-muted'}`}>
+                            <PackageCheck className={`h-5 w-5 ${trackingData.steps.some(s => s.completed) ? 'text-primary' : 'text-muted-foreground'}`} />
+                          </div>
+                          <div className="flex-1 space-y-3">
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-semibold">Restoration Process</h4>
+                              <Badge variant="outline">
+                                {trackingData.restorationLevel}
+                              </Badge>
+                            </div>
+                            
+                            {trackingData.steps.length > 0 ? (
+                              <div className="space-y-2">
+                                {trackingData.steps.map((step, index) => (
+                                  <div key={index} className="flex items-start gap-2 text-sm">
+                                    {step.completed ? (
+                                      <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                                    ) : (
+                                      <Clock className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                                    )}
+                                    <div className="flex-1">
+                                      <p className={step.completed ? 'text-foreground' : 'text-muted-foreground'}>
+                                        {step.description}
+                                      </p>
+                                      {step.completed && (
+                                        <p className="text-xs text-muted-foreground">
+                                          {formatTimestamp(step.timestamp)}
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="text-sm text-muted-foreground">
+                                Restoration steps will appear here once work begins
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Shipping Status */}
+                        <div className="flex items-start gap-4 p-4 rounded-lg border bg-card">
+                          <div className={`p-2 rounded-full ${trackingData.shipped ? 'bg-primary/10' : 'bg-muted'}`}>
+                            <Truck className={`h-5 w-5 ${trackingData.shipped ? 'text-primary' : 'text-muted-foreground'}`} />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-semibold">Shipped</h4>
+                              {trackingData.shipped && (
+                                <Badge variant="default" className="bg-primary">
+                                  <CheckCircle2 className="h-3 w-3 mr-1" />
+                                  Complete
+                                </Badge>
+                              )}
+                              {!trackingData.shipped && (
+                                <Badge variant="secondary">
+                                  <Clock className="h-3 w-3 mr-1" />
+                                  Pending
+                                </Badge>
+                              )}
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {trackingData.shipped && trackingData.shippingTimestamp
+                                ? `Shipped on ${formatTimestamp(trackingData.shippingTimestamp)}`
+                                : 'Your cards will be shipped once restoration is complete'}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    </>
+                  )}
                 </div>
               )}
             </CardContent>

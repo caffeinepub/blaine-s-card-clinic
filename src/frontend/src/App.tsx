@@ -3,6 +3,7 @@ import { HeroSection } from './components/HeroSection';
 import { ServiceTiersSection } from './components/ServiceTiersSection';
 import { TrackPackageSection } from './components/TrackPackageSection';
 import { ContactFormSection } from './components/ContactFormSection';
+import { AdminOrderManagementSection } from './components/AdminOrderManagementSection';
 import { SiteFooter } from './components/SiteFooter';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <ServiceTiersSection />
         <ContactFormSection />
         <TrackPackageSection />
+        <AdminOrderManagementSection />
       </main>
       <SiteFooter />
     </div>

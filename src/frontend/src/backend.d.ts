@@ -25,6 +25,11 @@ export interface TrackingStateView {
     steps: Array<RestorationStep>;
     shippingTimestamp?: Time;
 }
+export enum OrderStatus {
+    shipped = "shipped",
+    delivered = "delivered",
+    processing = "processing"
+}
 export enum UserRole {
     admin = "admin",
     user = "user",
@@ -35,10 +40,15 @@ export interface backendInterface {
     addCategory(email: string, category: string): Promise<void>;
     addRestorationStep(trackingCode: string, description: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    bootstrap(): Promise<void>;
+    checkTrackingNumberStatus(trackingNumber: string): Promise<OrderStatus>;
     completeRestorationStep(trackingCode: string, index: bigint): Promise<void>;
+    createOrder(trackingNumber: string): Promise<OrderStatus>;
     createTrackingState(trackingCode: string, restorationLevel: string): Promise<void>;
+    examineTrackingNumbers(): Promise<Array<[string, OrderStatus]>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getTrackingNumbers(): Promise<Array<[string, OrderStatus]>>;
     getTrackingState(trackingCode: string): Promise<TrackingStateView | null>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
@@ -48,4 +58,5 @@ export interface backendInterface {
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     submitContactForm(name: string, email: string, message: string): Promise<void>;
     updateTicketStatus(email: string, completed: boolean): Promise<void>;
+    updateTrackingNumberStatus(trackingNumber: string, newStatus: OrderStatus): Promise<OrderStatus>;
 }

@@ -1,5 +1,6 @@
 import { SiTiktok, SiFacebook, SiInstagram } from 'react-icons/si';
 import { Heart } from 'lucide-react';
+import { assetUrl } from '@/lib/assetUrl';
 
 export function SiteFooter() {
   const currentYear = new Date().getFullYear();
@@ -13,7 +14,12 @@ export function SiteFooter() {
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           {/* Brand */}
           <div className="space-y-4">
-            <div className="flex items-center">
+            <div className="flex items-center gap-3">
+              <img 
+                src={assetUrl('assets/IMG_8094-6.png')}
+                alt="Blaine's Card Clinic Logo"
+                className="logo-square h-12 w-12"
+              />
               <span className="text-lg font-bold">Blaine's Card Clinic</span>
             </div>
             <p className="text-sm text-muted-foreground">

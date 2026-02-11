@@ -1,56 +1,6 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Rename Track Package to Track Order and reorder homepage sections",
-  "requirements": [
-    {
-      "id": "REQ-1",
-      "summary": "Update all user-visible copy from “Track Package” to “Track Order” across header, hero CTA, footer quick link, and tracking section text.",
-      "acceptanceCriteria": [
-        "Site header navigation label reads \"Track Order\" on desktop and mobile.",
-        "Hero secondary CTA button reads \"Track Order\".",
-        "Footer quick link reads \"Track Order\".",
-        "Track section headline reads \"Track Your Order\" (and related card title/description copy is updated to use \"Order\" instead of \"Package\" where appropriate).",
-        "No remaining visible instances of the exact phrase \"Track Package\" appear in the UI."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/SiteHeader.tsx",
-          "operation": "modify",
-          "description": "Rename the header nav item label from “Track Package” to “Track Order” in both desktop and mobile menus while keeping the existing smooth-scroll target id unchanged. Uses shadcn-ui Button composition (do not edit ui components); verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/HeroSection.tsx",
-          "operation": "modify",
-          "description": "Rename the hero secondary CTA button text from “Track Package” to “Track Order” while preserving its smooth-scroll behavior to the tracking section. Uses shadcn-ui Button composition (do not edit ui components); verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/SiteFooter.tsx",
-          "operation": "modify",
-          "description": "Rename the footer quick link label from “Track Package” to “Track Order” while keeping its scroll-to-section behavior intact. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/TrackPackageSection.tsx",
-          "operation": "modify",
-          "description": "Update tracking section user-facing copy to replace “Package” wording with “Order” where appropriate (e.g., section headline “Track Your Order”, card title/description), ensuring the exact phrase “Track Package” is not shown anywhere. Keep the section id used for smooth scrolling unchanged unless all callers are updated. Uses shadcn-ui Card/Button/etc. composition (do not edit ui components); verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Reorder homepage sections so Pricing is followed by the Free Quote form, and the Track Order section comes below the quote form.",
-      "acceptanceCriteria": [
-        "On the rendered page, the section order is: Hero -> Pricing -> Get Your Free Quote (Request a Quote form) -> Track Order -> Footer.",
-        "Clicking the header/footer \"Track Order\" navigation item still smooth-scrolls to the Track Order section after it has been moved.",
-        "Clicking \"Get a Quote\" / \"Get a Free Quote\" still smooth-scrolls to the quote form section, which is now directly under Pricing."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Reorder the rendered sections to: HeroSection, ServiceTiersSection (Pricing), ContactFormSection (Free Quote), then TrackPackageSection (Track Order), keeping existing section ids so header/footer and hero smooth-scroll behavior continues to work. Verify the component's usage instructions before implementing."
-        }
-      ]
-    }
-  ]
+  "title": "Bootstrap current Internet Identity as an admin (frontend-only)",
+  "requirements": []
 }

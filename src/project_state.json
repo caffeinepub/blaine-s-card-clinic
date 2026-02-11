@@ -1,43 +1,30 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [],
+  "summary": "Web app with order-tracking and an admin dashboard gated by Internet Identity-based admin access control.",
+  "architectural_notes": [
+    "Admin area access is gated by Internet Identity login plus a backend-maintained admin allowlist; non-admins see \"Access Denied\"."
+  ],
   "known_issues": [],
   "isFixRequest": false,
-  "existing_features": [
-    {
-      "id": "feature-rename-all-user-facing-ui-text-that-currently-says-track-package-to-instead-say-track-order-including-navigation-hero-cta-button-footer-quick-link-and-the-track-section-headings-titles-descriptions",
-      "title": "Rename all user-facing UI text that currently says \"Track Package\" to instead say \"Track Order\", including navigation, hero CTA button, footer quick link, and the Track section headings/titles/descriptions.",
-      "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-reorder-the-homepage-sections-so-that-the-pricing-section-is-immediately-followed-by-the-get-your-free-quote-request-a-quote-form-section-and-the-track-order-section-appears-beneath-the-free-quote-section",
-      "title": "Reorder the homepage sections so that the Pricing section is immediately followed by the \"Get Your Free Quote\" / \"Request a Quote\" form section, and the Track Order section appears beneath the Free Quote section.",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    }
-  ],
+  "existing_features": [],
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Rename the \"Track Package\" tab/label to \"Track Order\"",
+      "summary": "Add the user's current Internet Identity as an admin so they can access the admin area/dashboard.",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Move the Track Order section/tab beneath the \"Get your free quote\" section so the Request a Quote form sits directly beneath the prices",
-      "reqIds": [],
+      "summary": "Update the Motoko backend to automatically grant the caller administrative permissions the first time they authenticate, so the user’s current Internet Identity can access the admin dashboard without any manual principal entry.",
+      "reqIds": [
+        "REQ-1"
+      ],
       "status": "pending"
     }
   ],
-  "projectName": "Rename Track Package to Track Order and move tracking section below Free Quote",
+  "projectName": "Bootstrap current Internet Identity as an admin",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

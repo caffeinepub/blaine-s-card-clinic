@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T22:25:48.875Z",
+  "generatedAt": "2026-02-11T22:49:35.447Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -12,35 +12,41 @@
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Remove the logo image from the top header so that no logo graphic is shown at the top of the screen (keep the rest of the header content and navigation working).",
+        "summary": "Add an admin-only UI to update a tracked order’s status after a tracking code has been entered, using the existing backend admin methods (createTrackingState, markPackageArrived, addRestorationStep, completeRestorationStep, markShipped).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/SiteHeader.tsx"
+          "frontend/src/hooks/useTrackingAdmin.ts",
+          "frontend/src/hooks/useTrackingQueries.ts",
+          "frontend/src/components/TrackPackageSection.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/SiteHeader.tsx"
+          "frontend/src/hooks/useTrackingAdmin.ts",
+          "frontend/src/hooks/useTrackingQueries.ts",
+          "frontend/src/components/TrackPackageSection.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Remove the logo image from the footer so that no logo graphic is shown at the bottom of the screen (keep the rest of the footer content, quick links, and social links intact).",
+        "summary": "Expose the current set of possible tracking statuses in the Track Order UI as clear English labels that match the existing tracking model (arrived boolean, restoration steps list with completion states, shipped boolean).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/SiteFooter.tsx"
+          "frontend/src/components/TrackPackageSection.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/SiteFooter.tsx"
+          "frontend/src/components/TrackPackageSection.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/SiteFooter.tsx",
-    "frontend/src/components/SiteHeader.tsx",
+    "frontend/src/components/TrackPackageSection.tsx",
+    "frontend/src/hooks/useTrackingAdmin.ts",
+    "frontend/src/hooks/useTrackingQueries.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

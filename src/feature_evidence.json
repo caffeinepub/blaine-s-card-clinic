@@ -2,17 +2,20 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-remove-the-logo-image-from-the-top-header-so-that-no-logo-graphic-is-shown-at-the-top-of-the-screen-keep-the-rest-of-the-header-content-and-navigation-working",
-      "featureTitle": "Remove the logo image from the top header so that no logo graphic is shown at the top of the screen (keep the rest of the header content and navigation working).",
+      "featureId": "feature-add-an-admin-only-ui-to-update-a-tracked-order-s-status-after-a-tracking-code-has-been-entered-using-the-existing-backend-admin-methods-createtrackingstate-markpackagearrived-addrestorationstep-completerestorationstep-markshipped",
+      "featureTitle": "Add an admin-only UI to update a tracked order’s status after a tracking code has been entered, using the existing backend admin methods (createTrackingState, markPackageArrived, addRestorationStep, completeRestorationStep, markShipped).",
       "files": [
-        "frontend/src/components/SiteHeader.tsx"
+        "frontend/src/components/TrackPackageSection.tsx",
+        "frontend/src/hooks/useTrackingAdmin.ts",
+        "frontend/src/hooks/useTrackingQueries.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
         "REQ-1"
@@ -20,17 +23,18 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-remove-the-logo-image-from-the-footer-so-that-no-logo-graphic-is-shown-at-the-bottom-of-the-screen-keep-the-rest-of-the-footer-content-quick-links-and-social-links-intact",
-      "featureTitle": "Remove the logo image from the footer so that no logo graphic is shown at the bottom of the screen (keep the rest of the footer content, quick links, and social links intact).",
+      "featureId": "feature-expose-the-current-set-of-possible-tracking-statuses-in-the-track-order-ui-as-clear-english-labels-that-match-the-existing-tracking-model-arrived-boolean-restoration-steps-list-with-completion-states-shipped-boolean",
+      "featureTitle": "Expose the current set of possible tracking statuses in the Track Order UI as clear English labels that match the existing tracking model (arrived boolean, restoration steps list with completion states, shipped boolean).",
       "files": [
-        "frontend/src/components/SiteFooter.tsx"
+        "frontend/src/components/TrackPackageSection.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
         "REQ-2"

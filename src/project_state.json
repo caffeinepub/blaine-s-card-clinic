@@ -1,22 +1,22 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
+  "summary": "Order tracking feature: allow placing a tracking code and managing the order's tracking/status lifecycle.",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-remove-the-logo-image-from-the-top-header-so-that-no-logo-graphic-is-shown-at-the-top-of-the-screen-keep-the-rest-of-the-header-content-and-navigation-working",
-      "title": "Remove the logo image from the top header so that no logo graphic is shown at the top of the screen (keep the rest of the header content and navigation working).",
+      "id": "feature-add-an-admin-only-ui-to-update-a-tracked-order-s-status-after-a-tracking-code-has-been-entered-using-the-existing-backend-admin-methods-createtrackingstate-markpackagearrived-addrestorationstep-completerestorationstep-markshipped",
+      "title": "Add an admin-only UI to update a tracked order’s status after a tracking code has been entered, using the existing backend admin methods (createTrackingState, markPackageArrived, addRestorationStep, completeRestorationStep, markShipped).",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-remove-the-logo-image-from-the-footer-so-that-no-logo-graphic-is-shown-at-the-bottom-of-the-screen-keep-the-rest-of-the-footer-content-quick-links-and-social-links-intact",
-      "title": "Remove the logo image from the footer so that no logo graphic is shown at the bottom of the screen (keep the rest of the footer content, quick links, and social links intact).",
+      "id": "feature-expose-the-current-set-of-possible-tracking-statuses-in-the-track-order-ui-as-clear-english-labels-that-match-the-existing-tracking-model-arrived-boolean-restoration-steps-list-with-completion-states-shipped-boolean",
+      "title": "Expose the current set of possible tracking statuses in the Track Order UI as clear English labels that match the existing tracking model (arrived boolean, restoration steps list with completion states, shipped boolean).",
       "reqIds": [
         "REQ-2"
       ],
@@ -26,12 +26,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Remove the logo from the top of the screen and from the bottom/footer",
+      "summary": "Add UI/workflow to update a tracked order’s status after a tracking code has been entered; clarify and support the set of possible statuses.",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Remove header and footer logos",
+  "projectName": "Add admin workflow to update tracked order status and document current status states",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

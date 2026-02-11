@@ -39,12 +39,12 @@ export function SiteFooter() {
               <li>
                 <button
                   onClick={() => {
-                    const element = document.getElementById('services');
+                    const element = document.getElementById('track-package');
                     element?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Services
+                  Track Order
                 </button>
               </li>
               <li>

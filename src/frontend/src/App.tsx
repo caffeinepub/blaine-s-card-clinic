@@ -1,6 +1,7 @@
 import { SiteHeader } from './components/SiteHeader';
 import { HeroSection } from './components/HeroSection';
 import { ServiceTiersSection } from './components/ServiceTiersSection';
+import { TrackPackageSection } from './components/TrackPackageSection';
 import { ContactFormSection } from './components/ContactFormSection';
 import { SiteFooter } from './components/SiteFooter';
 
@@ -12,6 +13,7 @@ function App() {
         <HeroSection />
         <ServiceTiersSection />
         <ContactFormSection />
+        <TrackPackageSection />
       </main>
       <SiteFooter />
     </div>

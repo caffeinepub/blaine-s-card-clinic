@@ -8,10 +8,55 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
+export const UserProfile = IDL.Record({
+  'name' : IDL.Text,
+  'email' : IDL.Text,
+});
+export const Time = IDL.Int;
+export const RestorationStep = IDL.Record({
+  'completed' : IDL.Bool,
+  'description' : IDL.Text,
+  'timestamp' : Time,
+});
+export const TrackingStateView = IDL.Record({
+  'shipped' : IDL.Bool,
+  'trackingCode' : IDL.Text,
+  'arrived' : IDL.Bool,
+  'restorationLevel' : IDL.Text,
+  'steps' : IDL.Vec(RestorationStep),
+  'shippingTimestamp' : IDL.Opt(Time),
+});
+
 export const idlService = IDL.Service({
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'addCategories' : IDL.Func([IDL.Text, IDL.Vec(IDL.Text)], [], []),
   'addCategory' : IDL.Func([IDL.Text, IDL.Text], [], []),
+  'addRestorationStep' : IDL.Func([IDL.Text, IDL.Text], [], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'completeRestorationStep' : IDL.Func([IDL.Text, IDL.Nat], [], []),
+  'createTrackingState' : IDL.Func([IDL.Text, IDL.Text], [], []),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getTrackingState' : IDL.Func(
+      [IDL.Text],
+      [IDL.Opt(TrackingStateView)],
+      ['query'],
+    ),
+  'getUserProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(UserProfile)],
+      ['query'],
+    ),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isTicketCompleted' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+  'markPackageArrived' : IDL.Func([IDL.Text], [], []),
+  'markShipped' : IDL.Func([IDL.Text], [], []),
+  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'submitContactForm' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
   'updateTicketStatus' : IDL.Func([IDL.Text, IDL.Bool], [], []),
 });
@@ -19,10 +64,52 @@ export const idlService = IDL.Service({
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
+  const UserProfile = IDL.Record({ 'name' : IDL.Text, 'email' : IDL.Text });
+  const Time = IDL.Int;
+  const RestorationStep = IDL.Record({
+    'completed' : IDL.Bool,
+    'description' : IDL.Text,
+    'timestamp' : Time,
+  });
+  const TrackingStateView = IDL.Record({
+    'shipped' : IDL.Bool,
+    'trackingCode' : IDL.Text,
+    'arrived' : IDL.Bool,
+    'restorationLevel' : IDL.Text,
+    'steps' : IDL.Vec(RestorationStep),
+    'shippingTimestamp' : IDL.Opt(Time),
+  });
+  
   return IDL.Service({
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'addCategories' : IDL.Func([IDL.Text, IDL.Vec(IDL.Text)], [], []),
     'addCategory' : IDL.Func([IDL.Text, IDL.Text], [], []),
+    'addRestorationStep' : IDL.Func([IDL.Text, IDL.Text], [], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'completeRestorationStep' : IDL.Func([IDL.Text, IDL.Nat], [], []),
+    'createTrackingState' : IDL.Func([IDL.Text, IDL.Text], [], []),
+    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getTrackingState' : IDL.Func(
+        [IDL.Text],
+        [IDL.Opt(TrackingStateView)],
+        ['query'],
+      ),
+    'getUserProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isTicketCompleted' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+    'markPackageArrived' : IDL.Func([IDL.Text], [], []),
+    'markShipped' : IDL.Func([IDL.Text], [], []),
+    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'submitContactForm' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
     'updateTicketStatus' : IDL.Func([IDL.Text, IDL.Bool], [], []),
   });

@@ -16,8 +16,8 @@ export function HeroSection() {
     }
   };
 
-  const scrollToServices = () => {
-    const element = document.getElementById('services');
+  const scrollToTrackPackage = () => {
+    const element = document.getElementById('track-package');
     if (element) {
       const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
@@ -68,10 +68,10 @@ export function HeroSection() {
             <Button
               size="lg"
               variant="outline"
-              onClick={scrollToServices}
+              onClick={scrollToTrackPackage}
               className="text-lg px-8 py-6 border-2 hover:bg-accent hover:text-accent-foreground"
             >
-              View Services
+              Track Order
             </Button>
           </div>
 

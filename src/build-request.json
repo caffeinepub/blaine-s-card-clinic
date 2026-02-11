@@ -1,55 +1,55 @@
 {
   "kind": "build_request",
-  "title": "Remove header and footer logos",
+  "title": "Add admin workflow to update tracked order status and document current status states",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Remove the logo image from the top header so that no logo graphic is shown at the top of the screen (keep the rest of the header content and navigation working).",
-      "target": "frontend",
+      "text": "Add an admin-only UI to update a tracked order’s status after a tracking code has been entered, using the existing backend admin methods (createTrackingState, markPackageArrived, addRestorationStep, completeRestorationStep, markShipped).",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-3"
         ],
         "quotes": [
-          "Can you please remove the logo at the top of the screen and the bottom?"
+          "Can you add a way for me to update the track order status."
         ]
       },
       "acceptanceCriteria": [
-        "The header no longer renders the image `assets/generated/blaines-card-clinic-logo.dim_512x512.png`.",
-        "The header still displays the site name text and the desktop/mobile navigation works as before.",
-        "No layout regressions: header height/spacing looks intentional on mobile and desktop.",
-        "No console errors/warnings caused by unused imports or missing assets (e.g., remove `assetUrl` import from `SiteHeader.tsx` if no longer needed)."
+        "When an admin user is authenticated (Internet Identity + admin token already supported by the app), the Track Order section shows an \"Admin: Update Order Status\" area.",
+        "Admin can enter a tracking code and perform the following actions via backend calls: create tracking entry (requires restorationLevel), mark order received (arrived=true), add restoration step (description), complete a restoration step by index, mark shipped (shipped=true and shippingTimestamp set).",
+        "If a non-admin user attempts any admin action, the UI prevents submission and/or displays an English error message returned from the backend (e.g., Unauthorized).",
+        "After an admin action succeeds, the displayed tracking timeline refreshes to reflect the updated state without requiring a full page reload."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Remove the logo image from the footer so that no logo graphic is shown at the bottom of the screen (keep the rest of the footer content, quick links, and social links intact).",
+      "text": "Expose the current set of possible tracking statuses in the Track Order UI as clear English labels that match the existing tracking model (arrived boolean, restoration steps list with completion states, shipped boolean).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-3"
         ],
         "quotes": [
-          "Can you please remove the logo at the top of the screen and the bottom?"
+          "What are the current possible statuses once a tracking code has been put in?"
         ]
       },
       "acceptanceCriteria": [
-        "The footer no longer renders the image `assets/generated/blaines-card-clinic-logo.dim_512x512.png`.",
-        "Footer text content, quick links scrolling behavior, and existing social links remain present and functional.",
-        "No layout regressions: footer branding area aligns cleanly without the logo image.",
-        "No console errors/warnings caused by unused imports or missing assets (e.g., remove `assetUrl` import from `SiteFooter.tsx` if no longer needed)."
+        "The Track Order section includes a short, user-facing explanation of the statuses/states supported by the system: Order Received (Pending/Complete), Restoration Process (shows restoration level and step list with Pending/Complete per step), Shipped (Pending/Complete, with shipped date when available).",
+        "The explanation is shown in English and does not reference internal field names like \"arrived\" or \"steps\".",
+        "The explanation remains consistent with what is rendered in the current timeline UI."
       ]
     }
   ],
   "constraints": [
-    "Frontend immutable paths must not be edited: `frontend/src/hooks/useInternetIdentity.ts`, `frontend/src/hooks/useInternetIdentity.tsx`, `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`, `frontend/src/components/ui`.",
-    "Do not add new backend services; backend remains a single Motoko actor."
+    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
+    "Do not edit files under frontend/src/components/ui or any other immutablePaths listed in SYSTEM_CONTEXT; compose existing UI components instead.",
+    "Use English for any user-facing text."
   ],
   "nonGoals": [
-    "Do not change the TikTok, Instagram, or Facebook URLs in the footer.",
-    "Do not redesign the overall site theme or typography beyond what is necessary to remove the logo images cleanly.",
-    "Do not remove the site name text unless explicitly requested."
+    "Integrate with external shipping carrier APIs or automatically derive statuses from third-party tracking codes.",
+    "Add non-Internet-Identity authentication methods.",
+    "Add real-time updates (polling/websockets/push notifications)."
   ],
   "imageRequirements": {
     "required": [],

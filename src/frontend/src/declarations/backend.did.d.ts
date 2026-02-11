@@ -10,10 +10,41 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface RestorationStep {
+  'completed' : boolean,
+  'description' : string,
+  'timestamp' : Time,
+}
+export type Time = bigint;
+export interface TrackingStateView {
+  'shipped' : boolean,
+  'trackingCode' : string,
+  'arrived' : boolean,
+  'restorationLevel' : string,
+  'steps' : Array<RestorationStep>,
+  'shippingTimestamp' : [] | [Time],
+}
+export interface UserProfile { 'name' : string, 'email' : string }
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
 export interface _SERVICE {
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'addCategories' : ActorMethod<[string, Array<string>], undefined>,
   'addCategory' : ActorMethod<[string, string], undefined>,
+  'addRestorationStep' : ActorMethod<[string, string], undefined>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'completeRestorationStep' : ActorMethod<[string, bigint], undefined>,
+  'createTrackingState' : ActorMethod<[string, string], undefined>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getTrackingState' : ActorMethod<[string], [] | [TrackingStateView]>,
+  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
   'isTicketCompleted' : ActorMethod<[string], boolean>,
+  'markPackageArrived' : ActorMethod<[string], undefined>,
+  'markShipped' : ActorMethod<[string], undefined>,
+  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'submitContactForm' : ActorMethod<[string, string, string], undefined>,
   'updateTicketStatus' : ActorMethod<[string, boolean], undefined>,
 }

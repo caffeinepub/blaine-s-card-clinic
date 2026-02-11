@@ -61,10 +61,10 @@ export function SiteHeader() {
             </Button>
             <Button
               variant="ghost"
-              onClick={() => scrollToSection('services')}
+              onClick={() => scrollToSection('track-package')}
               className="text-foreground hover:text-primary"
             >
-              Services
+              Track Order
             </Button>
             <Button
               variant="ghost"
@@ -104,10 +104,10 @@ export function SiteHeader() {
               </Button>
               <Button
                 variant="ghost"
-                onClick={() => scrollToSection('services')}
+                onClick={() => scrollToSection('track-package')}
                 className="justify-start text-foreground hover:text-primary"
               >
-                Services
+                Track Order
               </Button>
               <Button
                 variant="ghost"

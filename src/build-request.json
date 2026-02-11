@@ -1,68 +1,57 @@
 {
   "kind": "build_request",
-  "title": "Add admin workflow to update tracked order status and document current status states",
+  "title": "Rename Track Package to Track Order and move tracking section below Free Quote",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add an admin-only UI to update a tracked order’s status after a tracking code has been entered, using the existing backend admin methods (createTrackingState, markPackageArrived, addRestorationStep, completeRestorationStep, markShipped).",
-      "target": "both",
+      "text": "Rename all user-facing UI text that currently says \"Track Package\" to instead say \"Track Order\", including navigation, hero CTA button, footer quick link, and the Track section headings/titles/descriptions.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-4"
         ],
         "quotes": [
-          "Can you add a way for me to update the track order status."
+          "Can you change track package to track order."
         ]
       },
       "acceptanceCriteria": [
-        "When an admin user is authenticated (Internet Identity + admin token already supported by the app), the Track Order section shows an \"Admin: Update Order Status\" area.",
-        "Admin can enter a tracking code and perform the following actions via backend calls: create tracking entry (requires restorationLevel), mark order received (arrived=true), add restoration step (description), complete a restoration step by index, mark shipped (shipped=true and shippingTimestamp set).",
-        "If a non-admin user attempts any admin action, the UI prevents submission and/or displays an English error message returned from the backend (e.g., Unauthorized).",
-        "After an admin action succeeds, the displayed tracking timeline refreshes to reflect the updated state without requiring a full page reload."
+        "Site header navigation label reads \"Track Order\" on desktop and mobile.",
+        "Hero secondary CTA button reads \"Track Order\".",
+        "Footer quick link reads \"Track Order\".",
+        "Track section headline reads \"Track Your Order\" (and related card title/description copy is updated to use \"Order\" instead of \"Package\" where appropriate).",
+        "No remaining visible instances of the exact phrase \"Track Package\" appear in the UI."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Expose the current set of possible tracking statuses in the Track Order UI as clear English labels that match the existing tracking model (arrived boolean, restoration steps list with completion states, shipped boolean).",
+      "text": "Reorder the homepage sections so that the Pricing section is immediately followed by the \"Get Your Free Quote\" / \"Request a Quote\" form section, and the Track Order section appears beneath the Free Quote section.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-4"
         ],
         "quotes": [
-          "What are the current possible statuses once a tracking code has been put in?"
+          "Also can you move it beneath the get your free quote. This is so that the request a quote form is right beneath the prices"
         ]
       },
       "acceptanceCriteria": [
-        "The Track Order section includes a short, user-facing explanation of the statuses/states supported by the system: Order Received (Pending/Complete), Restoration Process (shows restoration level and step list with Pending/Complete per step), Shipped (Pending/Complete, with shipped date when available).",
-        "The explanation is shown in English and does not reference internal field names like \"arrived\" or \"steps\".",
-        "The explanation remains consistent with what is rendered in the current timeline UI."
+        "On the rendered page, the section order is: Hero -> Pricing -> Get Your Free Quote (Request a Quote form) -> Track Order -> Footer.",
+        "Clicking the header/footer \"Track Order\" navigation item still smooth-scrolls to the Track Order section after it has been moved.",
+        "Clicking \"Get a Quote\" / \"Get a Free Quote\" still smooth-scrolls to the quote form section, which is now directly under Pricing."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
-    "Do not edit files under frontend/src/components/ui or any other immutablePaths listed in SYSTEM_CONTEXT; compose existing UI components instead.",
-    "Use English for any user-facing text."
+    "Frontend files under frontend/src/components/ui must not be edited (compose them instead).",
+    "Do not edit immutable paths listed in SYSTEM_CONTEXT.frontend.immutablePaths."
   ],
   "nonGoals": [
-    "Integrate with external shipping carrier APIs or automatically derive statuses from third-party tracking codes.",
-    "Add non-Internet-Identity authentication methods.",
-    "Add real-time updates (polling/websockets/push notifications)."
+    "Do not change backend tracking or contact-form behavior.",
+    "Do not change pricing tiers or quote form fields/validation logic."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

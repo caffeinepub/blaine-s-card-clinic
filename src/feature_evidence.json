@@ -2,12 +2,13 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-an-admin-only-ui-to-update-a-tracked-order-s-status-after-a-tracking-code-has-been-entered-using-the-existing-backend-admin-methods-createtrackingstate-markpackagearrived-addrestorationstep-completerestorationstep-markshipped",
-      "featureTitle": "Add an admin-only UI to update a tracked order’s status after a tracking code has been entered, using the existing backend admin methods (createTrackingState, markPackageArrived, addRestorationStep, completeRestorationStep, markShipped).",
+      "featureId": "feature-rename-all-user-facing-ui-text-that-currently-says-track-package-to-instead-say-track-order-including-navigation-hero-cta-button-footer-quick-link-and-the-track-section-headings-titles-descriptions",
+      "featureTitle": "Rename all user-facing UI text that currently says \"Track Package\" to instead say \"Track Order\", including navigation, hero CTA button, footer quick link, and the Track section headings/titles/descriptions.",
       "files": [
-        "frontend/src/components/TrackPackageSection.tsx",
-        "frontend/src/hooks/useTrackingAdmin.ts",
-        "frontend/src/hooks/useTrackingQueries.ts"
+        "frontend/src/components/HeroSection.tsx",
+        "frontend/src/components/SiteFooter.tsx",
+        "frontend/src/components/SiteHeader.tsx",
+        "frontend/src/components/TrackPackageSection.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -23,10 +24,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-expose-the-current-set-of-possible-tracking-statuses-in-the-track-order-ui-as-clear-english-labels-that-match-the-existing-tracking-model-arrived-boolean-restoration-steps-list-with-completion-states-shipped-boolean",
-      "featureTitle": "Expose the current set of possible tracking statuses in the Track Order UI as clear English labels that match the existing tracking model (arrived boolean, restoration steps list with completion states, shipped boolean).",
+      "featureId": "feature-reorder-the-homepage-sections-so-that-the-pricing-section-is-immediately-followed-by-the-get-your-free-quote-request-a-quote-form-section-and-the-track-order-section-appears-beneath-the-free-quote-section",
+      "featureTitle": "Reorder the homepage sections so that the Pricing section is immediately followed by the \"Get Your Free Quote\" / \"Request a Quote\" form section, and the Track Order section appears beneath the Free Quote section.",
       "files": [
-        "frontend/src/components/TrackPackageSection.tsx"
+        "frontend/src/App.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",

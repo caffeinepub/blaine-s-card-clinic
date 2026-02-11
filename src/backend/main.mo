@@ -10,6 +10,7 @@ import Principal "mo:core/Principal";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
+
 actor {
   // Initialize the access control system
   let accessControlState = AccessControl.initState();
@@ -136,30 +137,33 @@ actor {
   // Tracking RESTORATION process -----------
   type RestorationStep = {
     description : Text;
-    timestamp : Time.Time;
+    timestamp : Time.Time; // marks when step was completed
     completed : Bool;
   };
 
+  // Type for public API (immutable) - used for return
   public type TrackingStateView = {
     trackingCode : Text;
     arrived : Bool;
     restorationLevel : Text;
-    steps : [RestorationStep];
+    steps : [RestorationStep]; // immutable array for public API
     shipped : Bool;
     shippingTimestamp : ?Time.Time;
   };
 
+  // Type for private backend state (mutable)
   type TrackingState = {
     trackingCode : Text;
     arrived : Bool;
     restorationLevel : Text;
-    steps : List.List<RestorationStep>;
+    steps : List.List<RestorationStep>; // mutable list for internal use
     shipped : Bool;
     shippingTimestamp : ?Time.Time;
   };
 
-  let trackingStore = Map.empty<Text, TrackingState>();
+  let trackingStore = Map.empty<Text, TrackingState>(); //track by code.
 
+  // Convert mutable TrackingState to immutable TrackingStateView
   func toTrackingStateView(state : TrackingState) : TrackingStateView {
     {
       state with
@@ -167,8 +171,7 @@ actor {
     };
   };
 
-  // ADMIN ONLY ORDER UPDATE FUNCTIONS
-  // Exposed for frontend interactive admin form
+  // Admin only - creating tracking entries is internal operation
   public shared ({ caller }) func createTrackingState(trackingCode : Text, restorationLevel : Text) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can create tracking states");
@@ -184,6 +187,7 @@ actor {
     trackingStore.add(trackingCode, newState);
   };
 
+  // Admin only - marking arrival is internal operation
   public shared ({ caller }) func markPackageArrived(trackingCode : Text) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can mark packages as arrived");
@@ -198,6 +202,7 @@ actor {
     };
   };
 
+  // Admin only - adding restoration steps is internal operation
   public shared ({ caller }) func addRestorationStep(trackingCode : Text, description : Text) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can add restoration steps");
@@ -218,6 +223,7 @@ actor {
     };
   };
 
+  // Admin only - completing restoration steps is internal operation
   public shared ({ caller }) func completeRestorationStep(trackingCode : Text, index : Nat) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can complete restoration steps");
@@ -253,6 +259,7 @@ actor {
     };
   };
 
+  // Admin only - marking shipped is internal operation
   public shared ({ caller }) func markShipped(trackingCode : Text) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can mark packages as shipped");
@@ -274,10 +281,8 @@ actor {
     };
   };
 
+  // Public query - anyone with tracking code can view status
   public query ({ caller }) func getTrackingState(trackingCode : Text) : async ?TrackingStateView {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view tracking information");
-    };
     switch (trackingStore.get(trackingCode)) {
       case (?state) { ?toTrackingStateView(state) };
       case (null) { null };

@@ -1,22 +1,22 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Order tracking feature: allow placing a tracking code and managing the order's tracking/status lifecycle.",
+  "summary": "New project",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-an-admin-only-ui-to-update-a-tracked-order-s-status-after-a-tracking-code-has-been-entered-using-the-existing-backend-admin-methods-createtrackingstate-markpackagearrived-addrestorationstep-completerestorationstep-markshipped",
-      "title": "Add an admin-only UI to update a tracked order’s status after a tracking code has been entered, using the existing backend admin methods (createTrackingState, markPackageArrived, addRestorationStep, completeRestorationStep, markShipped).",
+      "id": "feature-rename-all-user-facing-ui-text-that-currently-says-track-package-to-instead-say-track-order-including-navigation-hero-cta-button-footer-quick-link-and-the-track-section-headings-titles-descriptions",
+      "title": "Rename all user-facing UI text that currently says \"Track Package\" to instead say \"Track Order\", including navigation, hero CTA button, footer quick link, and the Track section headings/titles/descriptions.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-expose-the-current-set-of-possible-tracking-statuses-in-the-track-order-ui-as-clear-english-labels-that-match-the-existing-tracking-model-arrived-boolean-restoration-steps-list-with-completion-states-shipped-boolean",
-      "title": "Expose the current set of possible tracking statuses in the Track Order UI as clear English labels that match the existing tracking model (arrived boolean, restoration steps list with completion states, shipped boolean).",
+      "id": "feature-reorder-the-homepage-sections-so-that-the-pricing-section-is-immediately-followed-by-the-get-your-free-quote-request-a-quote-form-section-and-the-track-order-section-appears-beneath-the-free-quote-section",
+      "title": "Reorder the homepage sections so that the Pricing section is immediately followed by the \"Get Your Free Quote\" / \"Request a Quote\" form section, and the Track Order section appears beneath the Free Quote section.",
       "reqIds": [
         "REQ-2"
       ],
@@ -26,12 +26,18 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add UI/workflow to update a tracked order’s status after a tracking code has been entered; clarify and support the set of possible statuses.",
+      "summary": "Rename the \"Track Package\" tab/label to \"Track Order\"",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Move the Track Order section/tab beneath the \"Get your free quote\" section so the Request a Quote form sits directly beneath the prices",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Add admin workflow to update tracked order status and document current status states",
+  "projectName": "Rename Track Package to Track Order and move tracking section below Free Quote",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

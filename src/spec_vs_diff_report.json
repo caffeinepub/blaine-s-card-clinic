@@ -1,48 +1,65 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T22:49:35.445Z",
-  "summary": "The diff implements a new admin tracking hook set and updates the Track Order UI to include an admin workflow and a user-facing status guide. However, some REQ-1 acceptance details (notably explicit admin-only gating/labeling and non-admin prevention) are not fully verifiable from the truncated diff. The backend also includes unrelated new/modified profile and ticket-management functionality that is not requested.",
-  "missing_requirements": [
-    {
-      "id": "REQ-1",
-      "requirement": "When an admin user is authenticated, the Track Order section shows an \"Admin: Update Order Status\" area, and non-admin users are prevented from submitting admin actions and/or see an English Unauthorized-style error.",
-      "reason": "TrackPackageSection.tsx is truncated before the admin panel render logic; the shown admin action handlers do not themselves check `isAdmin` before calling mutations, so it is not possible to confirm from the provided diff summary that the UI is actually gated to admins only, includes the exact required label, or blocks non-admin submissions.",
-      "evidence": [
-        "frontend/src/components/TrackPackageSection.tsx"
-      ]
-    }
-  ],
+  "generatedAt": "2026-02-11T22:41:56.814Z",
+  "summary": "REQ-1 and REQ-2 appear implemented: user-facing labels are updated to “Track Order” in header/hero/footer and the tracking section headline/title is updated; homepage section order is Pricing -> Free Quote -> Track section with scroll targets still pointing to the tracking section. However, the diff also includes several unrelated UI/style/pricing changes that were not requested and may violate stated non-goals (e.g., pricing tier changes).",
+  "missing_requirements": [],
   "hallucinated_features": [
     {
-      "description": "Added/modified backend user profile management endpoints (getCallerUserProfile/getUserProfile/saveCallerUserProfile) with authorization checks.",
-      "reason": "The BuildRequest is solely about order tracking admin workflow and status documentation; profile CRUD is unrelated and not requested.",
+      "description": "Changes to pricing tiers/turnaround times/features in the ServiceTiersSection.",
+      "reason": "BuildRequest explicitly states as a non-goal: “Do not change pricing tiers or quote form fields/validation logic.” The diff summary indicates pricing tier content was updated.",
       "evidence": [
-        "backend/main.mo"
+        "frontend-file-summaries.txt (ServiceTiersSection summary)"
       ]
     },
     {
-      "description": "Added/modified backend ticket/contact-form management endpoints and admin categorization/status update functions (updateTicketStatus, isTicketCompleted, addCategory/addCategories).",
-      "reason": "Not requested by REQ-1/REQ-2 and unrelated to tracking-status admin workflow and UI documentation.",
+      "description": "Global theme/color palette updates (new OKLCH red/white palette) and button/success color changes in the contact form.",
+      "reason": "Not requested by REQ-1/REQ-2; scope was only renaming “Track Package” to “Track Order” and reordering sections.",
       "evidence": [
-        "backend/main.mo"
+        "frontend-file-summaries.txt (index.css summary)",
+        "frontend-file-summaries.txt (ContactFormSection summary)"
       ]
     },
     {
-      "description": "Added hook `useGetCallerUserRole` (calls backend getCallerUserRole) which is not referenced by any stated requirement in the BuildRequest.",
-      "reason": "REQ-1 requires checking/admin gating; this extra role-query hook is not requested and is not shown as used in the UI diff snippet.",
+      "description": "Logo sizing/cropping behavior changes via .logo-square updates.",
+      "reason": "Not requested by REQ-1/REQ-2; unrelated to renaming/reordering.",
       "evidence": [
-        "frontend/src/hooks/useTrackingAdmin.ts"
+        "frontend-file-summaries.txt (index.css summary)"
+      ]
+    },
+    {
+      "description": "Added/updated base-path-aware static asset URL helper (assetUrl) and updated hero to use it; plus introduction/reference of a new logo asset.",
+      "reason": "Not requested by REQ-1/REQ-2; unrelated to renaming/reordering.",
+      "evidence": [
+        "frontend/src/components/HeroSection.tsx",
+        "frontend-file-summaries.txt (assetUrl.ts summary)",
+        "frontend-file-summaries.txt (logo asset summary)"
+      ]
+    },
+    {
+      "description": "Tailwind configuration updates (custom tokens, typography, animations, etc.).",
+      "reason": "Not requested by REQ-1/REQ-2; unrelated to renaming/reordering.",
+      "evidence": [
+        "frontend-file-summaries.txt (frontend/tailwind.config.js summary)"
+      ]
+    },
+    {
+      "description": "Expanded/altered tracking UI functionality and additional tracking/query hooks (useTrackingQueries) beyond simple renaming/reordering.",
+      "reason": "Not requested; non-goals include not changing backend tracking behavior. While the diff summary can’t prove backend behavior changed, it does show new/expanded frontend tracking logic not required to satisfy REQ-1/REQ-2.",
+      "evidence": [
+        "frontend-file-summaries.txt (TrackPackageSection summary)",
+        "frontend-file-summaries.txt (useTrackingQueries.ts summary)"
       ]
     }
   ],
-  "confidence": 0.62,
+  "confidence": 0.7,
   "changed_files": [
-    "backend/main.mo",
     "frontend-file-summaries.txt",
+    "frontend/src/App.tsx",
+    "frontend/src/components/HeroSection.tsx",
+    "frontend/src/components/SiteFooter.tsx",
+    "frontend/src/components/SiteHeader.tsx",
     "frontend/src/components/TrackPackageSection.tsx",
-    "frontend/src/hooks/useTrackingAdmin.ts",
-    "frontend/src/hooks/useTrackingQueries.ts",
     "project_state.json"
   ]
 }

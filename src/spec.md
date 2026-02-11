@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Let admins update a tracked order’s status via the existing backend admin methods, and clearly document the current possible status states in the Track Order UI.
+**Goal:** Update homepage copy and layout so “Track Package” becomes “Track Order” everywhere, and the Track section appears below the Free Quote form (which should sit directly under Pricing).
 
 **Planned changes:**
-- Add an admin-only “Admin: Update Order Status” area in the Track Order section that appears only when an authenticated admin is present.
-- Provide admin actions for a entered tracking code: create tracking entry (with restoration level), mark order received, add a restoration step, complete a restoration step (by index), and mark shipped.
-- Refresh the displayed tracking timeline after successful admin actions without a full page reload, and prevent or show errors for non-admin attempts (e.g., Unauthorized).
-- Add a short English explanation in the Track Order UI describing the supported statuses: Order Received (Pending/Complete), Restoration Process (restoration level + step list with Pending/Complete), and Shipped (Pending/Complete with shipped date when available), consistent with the timeline display.
+- Rename all user-facing occurrences of “Track Package” to “Track Order” across header navigation (desktop/mobile), hero CTA, footer quick link, and Track section text (e.g., “Track Your Order” and related copy updated to use “Order” instead of “Package” where appropriate).
+- Reorder homepage sections to: Hero -> Pricing -> Get Your Free Quote (Request a Quote form) -> Track Order -> Footer.
+- Ensure header/footer navigation and hero CTAs still smooth-scroll to the correct sections after the reorder.
 
-**User-visible outcome:** Admin users can update an order’s tracking progress from the Track Order page and immediately see the updated timeline; all users can read a clear explanation of the possible tracking statuses after entering a tracking code.
+**User-visible outcome:** Visitors see “Track Order” throughout the site, the quote form appears directly beneath Pricing, and navigation links still scroll to the moved Track Order and quote sections correctly.

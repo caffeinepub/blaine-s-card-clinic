@@ -1,48 +1,54 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Admin status update workflow for tracked orders + documented status states",
+  "title": "Rename Track Package to Track Order and reorder homepage sections",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add an admin-only UI in Track Order to update tracking state via existing backend admin methods and refresh the timeline after changes.",
+      "summary": "Update all user-visible copy from “Track Package” to “Track Order” across header, hero CTA, footer quick link, and tracking section text.",
       "acceptanceCriteria": [
-        "When an admin user is authenticated (Internet Identity + admin token already supported by the app), the Track Order section shows an \"Admin: Update Order Status\" area.",
-        "Admin can enter a tracking code and perform the following actions via backend calls: create tracking entry (requires restorationLevel), mark order received (arrived=true), add restoration step (description), complete a restoration step by index, mark shipped (shipped=true and shippingTimestamp set).",
-        "If a non-admin user attempts any admin action, the UI prevents submission and/or displays an English error message returned from the backend (e.g., Unauthorized).",
-        "After an admin action succeeds, the displayed tracking timeline refreshes to reflect the updated state without requiring a full page reload."
+        "Site header navigation label reads \"Track Order\" on desktop and mobile.",
+        "Hero secondary CTA button reads \"Track Order\".",
+        "Footer quick link reads \"Track Order\".",
+        "Track section headline reads \"Track Your Order\" (and related card title/description copy is updated to use \"Order\" instead of \"Package\" where appropriate).",
+        "No remaining visible instances of the exact phrase \"Track Package\" appear in the UI."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useTrackingAdmin.ts",
-          "operation": "create",
-          "description": "Create React Query hooks for admin-only tracking mutations (createTrackingState, markPackageArrived, addRestorationStep, completeRestorationStep, markShipped) and a lightweight query for isCallerAdmin/getCallerUserRole to drive UI gating; each mutation should support surfacing backend errors as English messages and provide an easy way to trigger a tracking-state refresh. Use the authorization and core-infrastructure integration already present via the actor. Verify the component's usage instructions before implementing."
+          "path": "frontend/src/components/SiteHeader.tsx",
+          "operation": "modify",
+          "description": "Rename the header nav item label from “Track Package” to “Track Order” in both desktop and mobile menus while keeping the existing smooth-scroll target id unchanged. Uses shadcn-ui Button composition (do not edit ui components); verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/hooks/useTrackingQueries.ts",
+          "path": "frontend/src/components/HeroSection.tsx",
           "operation": "modify",
-          "description": "Extend tracking hooks to support refreshing the currently displayed tracking timeline after admin actions succeed (e.g., expose a refetch/invalidate mechanism keyed by trackingCode, or add a query-based tracking fetch that can be refetched without a full page reload). Ensure errors remain English and consistent with existing behavior. Verify the component's usage instructions before implementing."
+          "description": "Rename the hero secondary CTA button text from “Track Package” to “Track Order” while preserving its smooth-scroll behavior to the tracking section. Uses shadcn-ui Button composition (do not edit ui components); verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/SiteFooter.tsx",
+          "operation": "modify",
+          "description": "Rename the footer quick link label from “Track Package” to “Track Order” while keeping its scroll-to-section behavior intact. Verify the component's usage instructions before implementing."
         },
         {
           "path": "frontend/src/components/TrackPackageSection.tsx",
           "operation": "modify",
-          "description": "Compose an \"Admin: Update Order Status\" area inside the existing Track Order UI using existing shadcn-ui components (e.g., Card/Alert/Input/Button/Label/Badge) without editing immutable ui component files. Gate visibility and enabled state based on isCallerAdmin/getCallerUserRole, require a tracking code before enabling actions, provide controls for: creating a tracking entry (trackingCode + restorationLevel), marking received, adding a restoration step (description), completing a step by index, and marking shipped. Display backend authorization failures and other errors in English. On successful admin actions, refresh the shown tracking timeline (using the updated hooks) without a full page reload. Verify the component's usage instructions before implementing."
+          "description": "Update tracking section user-facing copy to replace “Package” wording with “Order” where appropriate (e.g., section headline “Track Your Order”, card title/description), ensuring the exact phrase “Track Package” is not shown anywhere. Keep the section id used for smooth scrolling unchanged unless all callers are updated. Uses shadcn-ui Card/Button/etc. composition (do not edit ui components); verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Document the supported tracking statuses in the Track Order UI using clear English labels aligned with the existing timeline rendering.",
+      "summary": "Reorder homepage sections so Pricing is followed by the Free Quote form, and the Track Order section comes below the quote form.",
       "acceptanceCriteria": [
-        "The Track Order section includes a short, user-facing explanation of the statuses/states supported by the system: Order Received (Pending/Complete), Restoration Process (shows restoration level and step list with Pending/Complete per step), Shipped (Pending/Complete, with shipped date when available).",
-        "The explanation is shown in English and does not reference internal field names like \"arrived\" or \"steps\".",
-        "The explanation remains consistent with what is rendered in the current timeline UI."
+        "On the rendered page, the section order is: Hero -> Pricing -> Get Your Free Quote (Request a Quote form) -> Track Order -> Footer.",
+        "Clicking the header/footer \"Track Order\" navigation item still smooth-scrolls to the Track Order section after it has been moved.",
+        "Clicking \"Get a Quote\" / \"Get a Free Quote\" still smooth-scrolls to the quote form section, which is now directly under Pricing."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/TrackPackageSection.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add a concise, user-facing explanation block within the Track Order section describing the supported states (Order Received, Restoration Process with level and step list, Shipped with date when available), using existing shadcn-ui composition (e.g., Alert/Card/typography) and English-only text. Ensure terminology and Pending/Complete mapping matches the timeline badges currently rendered. Verify the component's usage instructions before implementing."
+          "description": "Reorder the rendered sections to: HeroSection, ServiceTiersSection (Pricing), ContactFormSection (Free Quote), then TrackPackageSection (Track Order), keeping existing section ids so header/footer and hero smooth-scroll behavior continues to work. Verify the component's usage instructions before implementing."
         }
       ]
     }

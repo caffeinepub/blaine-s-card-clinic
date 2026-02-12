@@ -6,11 +6,15 @@ import List "mo:core/List";
 import Array "mo:core/Array";
 import Runtime "mo:core/Runtime";
 import Principal "mo:core/Principal";
+
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import Migration "migration"; // separate migration module
 
+(with migration = Migration.run)
 actor {
   var initialized = false; // Persistent initialization flag
+  let adminIds = Set.empty<Principal>();
 
   // Initialize the user system state
   let accessControlState = AccessControl.initState();
@@ -32,8 +36,28 @@ actor {
     if (initialized) {
       return; // Already initialized, safe to call again
     };
-    AccessControl.initialize(accessControlState, caller, "unused", "unused");
+    // Provide two empty text arguments to match new four-parameter signature
+    AccessControl.initialize(accessControlState, caller, "adminToken", "userProvidedToken");
     initialized := true;
+    adminIds.add(caller); // First admin becomes only initial admin
+  };
+
+  // Admin only - list all admin principals
+  public query ({ caller }) func getAdminIds() : async [Principal] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can list admin principals");
+    };
+    adminIds.toArray();
+  };
+
+  // Admin only - add a new admin principal
+  public shared ({ caller }) func addAdminId(newAdmin : Principal) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can add new admin ids");
+    };
+    adminIds.add(newAdmin);
+    // Grant admin role in the access control system
+    AccessControl.assignRole(accessControlState, caller, newAdmin, #admin);
   };
 
   // Diagnostics endpoint - returns initialization status
@@ -334,6 +358,11 @@ actor {
     #processing;
     #shipped;
     #delivered;
+    #packageReceived; // New - for when package arrives at facility
+    #inspectionComplete; // New - after initial inspection
+    #cleaningComplete; // New - after cleaning phase
+    #inPress; // New - card is being pressed
+    #finalTouches; // New - final adjustments before shipping
   };
 
   public type Order = {

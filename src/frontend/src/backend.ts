@@ -119,6 +119,11 @@ export interface TrackingStateView {
 }
 export enum OrderStatus {
     shipped = "shipped",
+    cleaningComplete = "cleaningComplete",
+    inspectionComplete = "inspectionComplete",
+    finalTouches = "finalTouches",
+    inPress = "inPress",
+    packageReceived = "packageReceived",
     delivered = "delivered",
     processing = "processing"
 }
@@ -129,6 +134,7 @@ export enum UserRole {
 }
 export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
+    addAdminId(newAdmin: Principal): Promise<void>;
     addCategories(email: string, catArray: Array<string>): Promise<void>;
     addCategory(email: string, category: string): Promise<void>;
     addRestorationStep(trackingCode: string, description: string): Promise<void>;
@@ -138,6 +144,7 @@ export interface backendInterface {
     createOrder(trackingNumber: string): Promise<OrderStatus>;
     createTrackingState(trackingCode: string, restorationLevel: string): Promise<void>;
     examineTrackingNumbers(): Promise<Array<[string, OrderStatus]>>;
+    getAdminIds(): Promise<Array<Principal>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getInitializationStatus(): Promise<{
@@ -173,6 +180,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor._initializeAccessControlWithSecret(arg0);
+            return result;
+        }
+    }
+    async addAdminId(arg0: Principal): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addAdminId(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addAdminId(arg0);
             return result;
         }
     }
@@ -300,6 +321,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.examineTrackingNumbers();
             return from_candid_vec_n5(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getAdminIds(): Promise<Array<Principal>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAdminIds();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAdminIds();
+            return result;
         }
     }
     async getCallerUserProfile(): Promise<UserProfile | null> {
@@ -582,11 +617,21 @@ function from_candid_tuple_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8
 function from_candid_variant_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     shipped: null;
 } | {
+    cleaningComplete: null;
+} | {
+    inspectionComplete: null;
+} | {
+    finalTouches: null;
+} | {
+    inPress: null;
+} | {
+    packageReceived: null;
+} | {
     delivered: null;
 } | {
     processing: null;
 }): OrderStatus {
-    return "shipped" in value ? OrderStatus.shipped : "delivered" in value ? OrderStatus.delivered : "processing" in value ? OrderStatus.processing : value;
+    return "shipped" in value ? OrderStatus.shipped : "cleaningComplete" in value ? OrderStatus.cleaningComplete : "inspectionComplete" in value ? OrderStatus.inspectionComplete : "finalTouches" in value ? OrderStatus.finalTouches : "inPress" in value ? OrderStatus.inPress : "packageReceived" in value ? OrderStatus.packageReceived : "delivered" in value ? OrderStatus.delivered : "processing" in value ? OrderStatus.processing : value;
 }
 function from_candid_variant_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     admin: null;
@@ -609,12 +654,32 @@ function to_candid_UserRole_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint
 function to_candid_variant_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: OrderStatus): {
     shipped: null;
 } | {
+    cleaningComplete: null;
+} | {
+    inspectionComplete: null;
+} | {
+    finalTouches: null;
+} | {
+    inPress: null;
+} | {
+    packageReceived: null;
+} | {
     delivered: null;
 } | {
     processing: null;
 } {
     return value == OrderStatus.shipped ? {
         shipped: null
+    } : value == OrderStatus.cleaningComplete ? {
+        cleaningComplete: null
+    } : value == OrderStatus.inspectionComplete ? {
+        inspectionComplete: null
+    } : value == OrderStatus.finalTouches ? {
+        finalTouches: null
+    } : value == OrderStatus.inPress ? {
+        inPress: null
+    } : value == OrderStatus.packageReceived ? {
+        packageReceived: null
     } : value == OrderStatus.delivered ? {
         delivered: null
     } : value == OrderStatus.processing ? {

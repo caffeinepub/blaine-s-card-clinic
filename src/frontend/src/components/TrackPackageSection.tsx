@@ -9,6 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { Package, PackageCheck, Truck, CheckCircle2, Clock, AlertCircle } from 'lucide-react';
 import { useTrackPackage } from '@/hooks/useTrackingQueries';
 import { OrderStatus } from '../backend';
+import { getOrderStatusLabel } from '@/utils/orderStatusLabel';
 
 export function TrackPackageSection() {
   const [trackingCode, setTrackingCode] = useState('');
@@ -58,30 +59,67 @@ export function TrackPackageSection() {
   };
 
   const getOrderStatusBadge = (status: OrderStatus) => {
+    const label = getOrderStatusLabel(status);
+    
     switch (status) {
       case OrderStatus.processing:
         return (
           <Badge variant="secondary" className="text-sm">
             <Clock className="h-3 w-3 mr-1" />
-            Processing
+            {label}
+          </Badge>
+        );
+      case OrderStatus.packageReceived:
+        return (
+          <Badge variant="default" className="bg-amber-600 text-sm">
+            <Package className="h-3 w-3 mr-1" />
+            {label}
+          </Badge>
+        );
+      case OrderStatus.inspectionComplete:
+        return (
+          <Badge variant="default" className="bg-purple-600 text-sm">
+            <CheckCircle2 className="h-3 w-3 mr-1" />
+            {label}
+          </Badge>
+        );
+      case OrderStatus.cleaningComplete:
+        return (
+          <Badge variant="default" className="bg-cyan-600 text-sm">
+            <CheckCircle2 className="h-3 w-3 mr-1" />
+            {label}
+          </Badge>
+        );
+      case OrderStatus.inPress:
+        return (
+          <Badge variant="default" className="bg-indigo-600 text-sm">
+            <PackageCheck className="h-3 w-3 mr-1" />
+            {label}
+          </Badge>
+        );
+      case OrderStatus.finalTouches:
+        return (
+          <Badge variant="default" className="bg-pink-600 text-sm">
+            <PackageCheck className="h-3 w-3 mr-1" />
+            {label}
           </Badge>
         );
       case OrderStatus.shipped:
         return (
           <Badge variant="default" className="bg-blue-600 text-sm">
             <Truck className="h-3 w-3 mr-1" />
-            Shipped
+            {label}
           </Badge>
         );
       case OrderStatus.delivered:
         return (
           <Badge variant="default" className="bg-green-600 text-sm">
             <CheckCircle2 className="h-3 w-3 mr-1" />
-            Delivered
+            {label}
           </Badge>
         );
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return <Badge variant="outline">{label}</Badge>;
     }
   };
 

@@ -1,75 +1,93 @@
 {
   "kind": "build_request",
-  "title": "Gate admin panel behind quick link + password and ensure Quote Requests are visible in admin UI",
+  "title": "Allow multiple Internet Identity principals to access the admin/login panel",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Hide the admin panel UI by default and only reveal it after the user clicks an \"Admin\" quick link and successfully enters the password \"PonytaPower17!\".",
-      "target": "frontend",
+      "id": "REQ-4",
+      "text": "Update backend access control so more than one Internet Identity principal can be granted admin access (i.e., multiple accepted accounts can pass the admin permission check), rather than only the first authenticated principal implicitly becoming the only admin.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-1"
         ],
         "quotes": [
-          "Do not have the admin panel show until you click the admin quick link and put in the password PonytaPower17!"
+          "I also have to log in with the internet account as well to get into the log in panel. Is there a way to add another accepted account to that?"
         ]
       },
       "acceptanceCriteria": [
-        "On initial page load, the admin panel content (AdminOrderManagementSection) is not rendered anywhere on the page.",
-        "Clicking the Admin quick link opens the admin password prompt modal.",
-        "Entering the exact password \"PonytaPower17!\" unlocks the admin panel and scrolls to the admin section.",
-        "Entering an incorrect password does not unlock the admin panel and shows an error message.",
-        "Refreshing the page does not automatically keep the admin panel unlocked (password must be entered again)."
+        "Backend supports granting admin access to multiple principals at the same time.",
+        "An existing admin can grant admin access to an additional principal without removing existing admins.",
+        "Admin-gated backend endpoints (e.g., order/ticket management endpoints) accept calls from any granted admin principal and reject non-admin principals.",
+        "The initialization flow remains idempotent (re-running initialization does not remove or reset existing admins)."
       ]
     },
     {
-      "id": "REQ-2",
-      "text": "Add an \"Admin\" quick link in the site footer Quick Links list that triggers the same admin unlock flow as the header Admin button (open password prompt when locked; scroll to admin section when unlocked).",
-      "target": "frontend",
+      "id": "REQ-5",
+      "text": "Add backend admin-management endpoints to: (1) list currently accepted admin principals, and (2) add an additional admin principal, restricted so that only existing admins can manage the admin allowlist.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-1"
         ],
         "quotes": [
-          "click the admin quick link"
+          "Is there a way to add another accepted account to that?"
         ]
       },
       "acceptanceCriteria": [
-        "The footer \"Quick Links\" section contains an \"Admin\" button/link.",
-        "When admin is locked, clicking the footer \"Admin\" quick link opens the password prompt modal.",
-        "When admin is already unlocked, clicking the footer \"Admin\" quick link scrolls smoothly to the admin section."
+        "A query endpoint exists to return the current set/list of admin principals.",
+        "A shared (update) endpoint exists to add a new admin principal.",
+        "Both endpoints enforce that only an existing admin can call them successfully.",
+        "Adding a principal that is already an admin is handled gracefully (no crash/trap)."
       ]
     },
     {
-      "id": "REQ-3",
-      "text": "Within the unlocked admin panel, ensure quote requests submitted via the public contact/quote form are visible in an admin \"Quote Forms\" / \"Quotes\" view.",
-      "target": "both",
+      "id": "REQ-6",
+      "text": "Expose a simple UI in the existing admin panel to manage accepted Internet Identity accounts: display the current list of accepted admin principals and provide a form to add another principal.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-1"
         ],
         "quotes": [
-          "In this admin panel, let the quote request be seen"
+          "Is there a way to add another accepted account to that?"
         ]
       },
       "acceptanceCriteria": [
-        "The admin panel includes a visible tab/section for quote requests (e.g., \"Quote Forms\" / \"Quotes\").",
-        "The quote requests view lists submitted tickets (name, email, message, category, status).",
-        "If there are no submitted tickets, the view shows an English empty state message.",
-        "The backend endpoint used to list tickets is admin-protected (rejects non-admin callers)."
+        "When viewing the admin panel as an admin, the UI shows the list of currently accepted admin principals.",
+        "The UI provides an input to add a new principal and a button to submit.",
+        "On success, the list refreshes to include the newly added principal.",
+        "On error (e.g., caller not admin, invalid principal text), the UI shows a clear English error message and does not break the page."
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Ensure the admin access gate UX clearly distinguishes between (a) not being logged in with Internet Identity and (b) being logged in but not being an accepted admin principal, using English user-facing text.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "I also have to log in with the internet account as well to get into the log in panel."
+        ]
+      },
+      "acceptanceCriteria": [
+        "If the user is not authenticated, the access-denied state prompts the user to log in.",
+        "If the user is authenticated but not an accepted admin, the access-denied state indicates they are authenticated but not authorized (accepted admin) and suggests contacting an admin to be added.",
+        "Copy is in English and does not imply that “the first user to log in becomes admin” if the system now supports managing multiple accepted admins."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui (read-only shadcn components).",
-    "Do not edit frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, or frontend/src/main.tsx (immutable paths).",
-    "Backend must remain a single Motoko actor in backend/main.mo; add migration.mo only if persistent state schema changes require it."
+    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
+    "Only generate/update backend/migration.mo if a stable-state upgrade is required by the access-control/admin-list persistence changes (conditional migration policy).",
+    "Do not modify any frontend paths listed as immutable in SYSTEM_CONTEXT (e.g., frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui/*)."
   ],
   "nonGoals": [
-    "Implementing secure server-side authentication based on the provided password (the password gate is UI-only).",
-    "Adding third-party authentication providers beyond Internet Identity.",
-    "Adding real-time updates or push notifications for quote requests."
+    "Implementing third-party authentication providers beyond Internet Identity.",
+    "Adding real-time collaboration/admin syncing (no websockets).",
+    "Creating a full user account system with usernames/passwords unless required to support the requested multi-admin Internet Identity allowlist."
   ],
   "imageRequirements": {
     "required": [],

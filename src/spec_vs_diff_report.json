@@ -1,44 +1,52 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-12T01:12:44.572Z",
-  "summary": "Admin gating infrastructure and a footer Admin quick link were added, plus backend ticket submission and admin-only status update. However, the diff summary does not provide evidence that the required password modal/validation flow is implemented, nor that an admin-protected backend endpoint exists to list quote/quote-form tickets for an admin “Quotes” view.",
+  "generatedAt": "2026-02-12T19:32:28.297Z",
+  "summary": "Diff implements multi-admin management via new backend endpoints (getAdminIds/addAdminId), a new frontend admin-principal management UI section with React Query hooks, and improved AccessDenied messaging. However, the backend persistence/migration story for the admin allowlist appears inconsistent and may reset admins on upgrade, and several added behaviors/endpoints were not explicitly requested.",
   "missing_requirements": [
     {
-      "id": "REQ-1",
-      "requirement": "Hide the admin panel UI by default and only reveal it after the user clicks an \"Admin\" quick link and successfully enters the password \"PonytaPower17!\" (including modal prompt, exact password check, error message on failure, scroll-to-admin on success, and not persisting unlock across refresh).",
-      "reason": "The provided diff summary does not include changes to the header/admin panel rendering or any password prompt/modal implementation or password verification logic. Only an AdminGateContext (unlock state + prompt open/close) is shown, but no UI for entering/verifying \"PonytaPower17!\" or error handling is evidenced.",
+      "id": "REQ-4",
+      "requirement": "Admin allowlist should not be removed/reset as part of initialization/upgrade (idempotent behavior should not wipe existing admins).",
+      "reason": "A migration was added that initializes the new adminIds field to an empty set on upgrade, which would drop any previously granted admins. The diff does not show any migration logic to preserve an existing admin list (or derive it from existing access-control state).",
       "evidence": [
-        "frontend/src/context/AdminGateContext.tsx",
-        "frontend/src/components/SiteFooter.tsx",
-        "frontend-file-summaries.txt (only mentions App/SiteHeader changes; not shown in actual diff)"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "requirement": "Within the unlocked admin panel, show quote requests in an admin \"Quote Forms\"/\"Quotes\" view and ensure the backend endpoint used to list tickets is admin-protected (rejects non-admin callers).",
-      "reason": "backend/main.mo shows storing tickets, public submission, and an admin-only status update, but no admin-protected query/list endpoint for retrieving all tickets is evidenced in the truncated diff. Also, no concrete admin UI implementation for a quotes list (with fields and empty state) is shown in the actual modified files.",
-      "evidence": [
-        "backend/main.mo (truncated; shows submitContactForm, updateTicketStatus, isTicketCompleted but no list endpoint)",
-        "frontend-file-summaries.txt (mentions AdminOrderManagementSection tabs/quote forms, but underlying file is not part of the shown diffs)"
+        "backend/migration.mo",
+        "backend/main.mo"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Backend access-control initialization and diagnostic endpoints (initializeAccessControl, getInitializationStatus) plus user profile read/write endpoints.",
-      "reason": "Not requested by any requirement; REQ-3 only calls for an admin-protected ticket listing endpoint (and quote visibility), not adding a broader access-control initialization flow or user profile system.",
+      "description": "Backend diagnostics endpoint returning initialization status and role text (getInitializationStatus).",
+      "reason": "Not requested in REQ-4 through REQ-7; only admin allowlist list/add endpoints were requested.",
       "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Frontend auto-initialization flow that attempts to initialize access control automatically when authenticated but not admin (with retry/rechecking state machine).",
+      "reason": "REQ-6/REQ-7 request admin-allowlist UI and clearer access-denied messaging; they do not request automatic initialization attempts or initialization UX logic.",
+      "evidence": [
+        "frontend/src/components/AdminOrderManagementSection.tsx"
+      ]
+    },
+    {
+      "description": "Unconditional addition of backend/migration.mo and wiring migration into the actor.",
+      "reason": "BuildRequest constraint says to only generate/update backend/migration.mo if a stable-state upgrade is required; the diff does not provide evidence that this migration is necessary or correct (and it appears to reset adminIds).",
+      "evidence": [
+        "backend/migration.mo",
         "backend/main.mo"
       ]
     }
   ],
-  "confidence": 0.63,
+  "confidence": 0.62,
   "changed_files": [
     "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/SiteFooter.tsx",
-    "frontend/src/context/AdminGateContext.tsx",
+    "frontend/src/components/AccessDeniedScreen.tsx",
+    "frontend/src/components/AdminOrderManagementSection.tsx",
+    "frontend/src/components/AdminPrincipalManagementSection.tsx",
+    "frontend/src/hooks/useAdminAllowlistQueries.ts",
     "project_state.json"
   ]
 }

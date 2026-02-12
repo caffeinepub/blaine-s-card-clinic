@@ -16,6 +16,11 @@ export interface FormData {
   'message' : string,
 }
 export type OrderStatus = { 'shipped' : null } |
+  { 'cleaningComplete' : null } |
+  { 'inspectionComplete' : null } |
+  { 'finalTouches' : null } |
+  { 'inPress' : null } |
+  { 'packageReceived' : null } |
   { 'delivered' : null } |
   { 'processing' : null };
 export interface RestorationStep {
@@ -43,6 +48,7 @@ export type UserRole = { 'admin' : null } |
   { 'guest' : null };
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addAdminId' : ActorMethod<[Principal], undefined>,
   'addCategories' : ActorMethod<[string, Array<string>], undefined>,
   'addCategory' : ActorMethod<[string, string], undefined>,
   'addRestorationStep' : ActorMethod<[string, string], undefined>,
@@ -52,6 +58,7 @@ export interface _SERVICE {
   'createOrder' : ActorMethod<[string], OrderStatus>,
   'createTrackingState' : ActorMethod<[string, string], undefined>,
   'examineTrackingNumbers' : ActorMethod<[], Array<[string, OrderStatus]>>,
+  'getAdminIds' : ActorMethod<[], Array<Principal>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getInitializationStatus' : ActorMethod<

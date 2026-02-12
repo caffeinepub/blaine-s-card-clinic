@@ -15,6 +15,11 @@ export const UserRole = IDL.Variant({
 });
 export const OrderStatus = IDL.Variant({
   'shipped' : IDL.Null,
+  'cleaningComplete' : IDL.Null,
+  'inspectionComplete' : IDL.Null,
+  'finalTouches' : IDL.Null,
+  'inPress' : IDL.Null,
+  'packageReceived' : IDL.Null,
   'delivered' : IDL.Null,
   'processing' : IDL.Null,
 });
@@ -49,6 +54,7 @@ export const Ticket = IDL.Record({
 
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addAdminId' : IDL.Func([IDL.Principal], [], []),
   'addCategories' : IDL.Func([IDL.Text, IDL.Vec(IDL.Text)], [], []),
   'addCategory' : IDL.Func([IDL.Text, IDL.Text], [], []),
   'addRestorationStep' : IDL.Func([IDL.Text, IDL.Text], [], []),
@@ -62,6 +68,7 @@ export const idlService = IDL.Service({
       [IDL.Vec(IDL.Tuple(IDL.Text, OrderStatus))],
       ['query'],
     ),
+  'getAdminIds' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getInitializationStatus' : IDL.Func(
@@ -120,6 +127,11 @@ export const idlFactory = ({ IDL }) => {
   });
   const OrderStatus = IDL.Variant({
     'shipped' : IDL.Null,
+    'cleaningComplete' : IDL.Null,
+    'inspectionComplete' : IDL.Null,
+    'finalTouches' : IDL.Null,
+    'inPress' : IDL.Null,
+    'packageReceived' : IDL.Null,
     'delivered' : IDL.Null,
     'processing' : IDL.Null,
   });
@@ -151,6 +163,7 @@ export const idlFactory = ({ IDL }) => {
   
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addAdminId' : IDL.Func([IDL.Principal], [], []),
     'addCategories' : IDL.Func([IDL.Text, IDL.Vec(IDL.Text)], [], []),
     'addCategory' : IDL.Func([IDL.Text, IDL.Text], [], []),
     'addRestorationStep' : IDL.Func([IDL.Text, IDL.Text], [], []),
@@ -168,6 +181,7 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(IDL.Tuple(IDL.Text, OrderStatus))],
         ['query'],
       ),
+    'getAdminIds' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getInitializationStatus' : IDL.Func(

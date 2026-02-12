@@ -37,6 +37,11 @@ export interface TrackingStateView {
 }
 export enum OrderStatus {
     shipped = "shipped",
+    cleaningComplete = "cleaningComplete",
+    inspectionComplete = "inspectionComplete",
+    finalTouches = "finalTouches",
+    inPress = "inPress",
+    packageReceived = "packageReceived",
     delivered = "delivered",
     processing = "processing"
 }
@@ -46,6 +51,7 @@ export enum UserRole {
     guest = "guest"
 }
 export interface backendInterface {
+    addAdminId(newAdmin: Principal): Promise<void>;
     addCategories(email: string, catArray: Array<string>): Promise<void>;
     addCategory(email: string, category: string): Promise<void>;
     addRestorationStep(trackingCode: string, description: string): Promise<void>;
@@ -55,6 +61,7 @@ export interface backendInterface {
     createOrder(trackingNumber: string): Promise<OrderStatus>;
     createTrackingState(trackingCode: string, restorationLevel: string): Promise<void>;
     examineTrackingNumbers(): Promise<Array<[string, OrderStatus]>>;
+    getAdminIds(): Promise<Array<Principal>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getInitializationStatus(): Promise<{

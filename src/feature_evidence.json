@@ -2,10 +2,12 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-hide-the-admin-panel-ui-by-default-and-only-reveal-it-after-the-user-clicks-an-admin-quick-link-and-successfully-enters-the-password-ponytapower17",
-      "featureTitle": "Hide the admin panel UI by default and only reveal it after the user clicks an \"Admin\" quick link and successfully enters the password \"PonytaPower17!\".",
+      "featureId": "feature-expose-a-simple-ui-in-the-existing-admin-panel-to-manage-accepted-internet-identity-accounts-display-the-current-list-of-accepted-admin-principals-and-provide-a-form-to-add-another-principal",
+      "featureTitle": "Expose a simple UI in the existing admin panel to manage accepted Internet Identity accounts: display the current list of accepted admin principals and provide a form to add another principal.",
       "files": [
-        "frontend/src/context/AdminGateContext.tsx"
+        "frontend/src/components/AdminOrderManagementSection.tsx",
+        "frontend/src/components/AdminPrincipalManagementSection.tsx",
+        "frontend/src/hooks/useAdminAllowlistQueries.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -16,15 +18,16 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-1"
+        "REQ-6"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-an-admin-quick-link-in-the-site-footer-quick-links-list-that-triggers-the-same-admin-unlock-flow-as-the-header-admin-button-open-password-prompt-when-locked-scroll-to-admin-section-when-unlocked",
-      "featureTitle": "Add an \"Admin\" quick link in the site footer Quick Links list that triggers the same admin unlock flow as the header Admin button (open password prompt when locked; scroll to admin section when unlocked).",
+      "featureId": "feature-ensure-the-admin-access-gate-ux-clearly-distinguishes-between-a-not-being-logged-in-with-internet-identity-and-b-being-logged-in-but-not-being-an-accepted-admin-principal-using-english-user-facing-text",
+      "featureTitle": "Ensure the admin access gate UX clearly distinguishes between (a) not being logged in with Internet Identity and (b) being logged in but not being an accepted admin principal, using English user-facing text.",
       "files": [
-        "frontend/src/components/SiteFooter.tsx"
+        "frontend/src/components/AccessDeniedScreen.tsx",
+        "frontend/src/components/AdminOrderManagementSection.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -35,7 +38,7 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-2"
+        "REQ-7"
       ],
       "confidence": "high"
     }

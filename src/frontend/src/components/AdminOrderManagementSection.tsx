@@ -16,7 +16,9 @@ import { useAdminDiagnostics } from '@/hooks/useAdminDiagnostics';
 import { AccessDeniedScreen } from './AccessDeniedScreen';
 import { AdminQuoteFormsSection } from './AdminQuoteFormsSection';
 import { AdminOrderTrackingSection } from './AdminOrderTrackingSection';
+import { AdminPrincipalManagementSection } from './AdminPrincipalManagementSection';
 import { OrderStatus } from '../backend';
+import { getOrderStatusLabel } from '@/utils/orderStatusLabel';
 
 export function AdminOrderManagementSection() {
   const { identity, login } = useInternetIdentity();
@@ -130,15 +132,27 @@ export function AdminOrderManagementSection() {
   };
 
   const getStatusBadge = (status: OrderStatus) => {
+    const label = getOrderStatusLabel(status);
+    
     switch (status) {
       case OrderStatus.processing:
-        return <Badge variant="secondary">Processing</Badge>;
+        return <Badge variant="secondary">{label}</Badge>;
+      case OrderStatus.packageReceived:
+        return <Badge variant="default" className="bg-amber-600">{label}</Badge>;
+      case OrderStatus.inspectionComplete:
+        return <Badge variant="default" className="bg-purple-600">{label}</Badge>;
+      case OrderStatus.cleaningComplete:
+        return <Badge variant="default" className="bg-cyan-600">{label}</Badge>;
+      case OrderStatus.inPress:
+        return <Badge variant="default" className="bg-indigo-600">{label}</Badge>;
+      case OrderStatus.finalTouches:
+        return <Badge variant="default" className="bg-pink-600">{label}</Badge>;
       case OrderStatus.shipped:
-        return <Badge variant="default" className="bg-blue-600">Shipped</Badge>;
+        return <Badge variant="default" className="bg-blue-600">{label}</Badge>;
       case OrderStatus.delivered:
-        return <Badge variant="default" className="bg-green-600">Delivered</Badge>;
+        return <Badge variant="default" className="bg-green-600">{label}</Badge>;
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return <Badge variant="outline">{label}</Badge>;
     }
   };
 
@@ -221,7 +235,7 @@ export function AdminOrderManagementSection() {
             Admin <span className="text-primary">Panel</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Manage orders, quote forms, and tracking
+            Manage orders, quote forms, tracking, and admin access
           </p>
           {isAdmin && (
             <div className="flex items-center justify-center gap-2 text-sm text-green-600">
@@ -245,12 +259,13 @@ export function AdminOrderManagementSection() {
 
         <div className="max-w-6xl mx-auto">
           <Tabs defaultValue="orders" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="orders">Create Order</TabsTrigger>
               <TabsTrigger value="update">Update Status</TabsTrigger>
               <TabsTrigger value="list">All Orders</TabsTrigger>
               <TabsTrigger value="quotes">Quote Forms</TabsTrigger>
               <TabsTrigger value="tracking">Order Tracking</TabsTrigger>
+              <TabsTrigger value="admins">Admin Access</TabsTrigger>
             </TabsList>
 
             {/* Create Order Tab */}
@@ -352,6 +367,11 @@ export function AdminOrderManagementSection() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value={OrderStatus.processing}>Processing</SelectItem>
+                          <SelectItem value={OrderStatus.packageReceived}>Package Received</SelectItem>
+                          <SelectItem value={OrderStatus.inspectionComplete}>First Inspection Complete</SelectItem>
+                          <SelectItem value={OrderStatus.cleaningComplete}>Cleaning Complete</SelectItem>
+                          <SelectItem value={OrderStatus.inPress}>Card in Press</SelectItem>
+                          <SelectItem value={OrderStatus.finalTouches}>Final Touches Being Performed</SelectItem>
                           <SelectItem value={OrderStatus.shipped}>Shipped</SelectItem>
                           <SelectItem value={OrderStatus.delivered}>Delivered</SelectItem>
                         </SelectContent>
@@ -417,20 +437,18 @@ export function AdminOrderManagementSection() {
                     <Alert variant="destructive">
                       <AlertCircle className="h-4 w-4" />
                       <AlertDescription>
-                        {ordersError instanceof Error
-                          ? ordersError.message
-                          : 'Failed to load orders. Please try again.'}
+                        Failed to load orders. Please try again.
                       </AlertDescription>
                     </Alert>
                   )}
 
-                  {orders && orders.length === 0 && (
+                  {!ordersLoading && !ordersError && orders && orders.length === 0 && (
                     <div className="text-center py-8 text-muted-foreground">
-                      No orders found. Create your first order to get started.
+                      <p>No orders found</p>
                     </div>
                   )}
 
-                  {orders && orders.length > 0 && (
+                  {!ordersLoading && !ordersError && orders && orders.length > 0 && (
                     <div className="rounded-md border">
                       <Table>
                         <TableHeader>
@@ -462,6 +480,11 @@ export function AdminOrderManagementSection() {
             {/* Order Tracking Tab */}
             <TabsContent value="tracking">
               <AdminOrderTrackingSection />
+            </TabsContent>
+
+            {/* Admin Access Tab */}
+            <TabsContent value="admins">
+              <AdminPrincipalManagementSection />
             </TabsContent>
           </Tabs>
         </div>

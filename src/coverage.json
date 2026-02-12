@@ -1,61 +1,74 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-12T01:12:44.575Z",
+  "generatedAt": "2026-02-12T19:32:28.299Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
+    "total": 4,
     "implemented": 2,
     "items": [
       {
-        "id": "REQ-1",
-        "summary": "Hide the admin panel UI by default and only reveal it after the user clicks an \"Admin\" quick link and successfully enters the password \"PonytaPower17!\".",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/context/AdminGateContext.tsx",
-          "frontend/src/components/AdminPasswordPromptModal.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/context/AdminGateContext.tsx"
-        ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Add an \"Admin\" quick link in the site footer Quick Links list that triggers the same admin unlock flow as the header Admin button (open password prompt when locked; scroll to admin section when unlocked).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/SiteFooter.tsx",
-          "frontend/src/components/SiteHeader.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/SiteFooter.tsx"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Within the unlocked admin panel, ensure quote requests submitted via the public contact/quote form are visible in an admin \"Quote Forms\" / \"Quotes\" view.",
-        "status": "missing",
-        "plannedFiles": [
-          "frontend/src/components/AdminOrderManagementSection.tsx",
-          "frontend/src/components/AdminQuoteFormsSection.tsx",
-          "frontend/src/hooks/useAdminTicketQueries.ts"
-        ],
+        "id": "REQ-4",
+        "summary": "Update backend access control so more than one Internet Identity principal can be granted admin access (i.e., multiple accepted accounts can pass the admin permission check), rather than only the first authenticated principal implicitly becoming the only admin.",
+        "status": "unknown",
+        "plannedFiles": [],
         "matchedFiles": []
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Add backend admin-management endpoints to: (1) list currently accepted admin principals, and (2) add an additional admin principal, restricted so that only existing admins can manage the admin allowlist.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Expose a simple UI in the existing admin panel to manage accepted Internet Identity accounts: display the current list of accepted admin principals and provide a form to add another principal.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useAdminAllowlistQueries.ts",
+          "frontend/src/components/AdminPrincipalManagementSection.tsx",
+          "frontend/src/components/AdminOrderManagementSection.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useAdminAllowlistQueries.ts",
+          "frontend/src/components/AdminPrincipalManagementSection.tsx",
+          "frontend/src/components/AdminOrderManagementSection.tsx"
+        ]
+      },
+      {
+        "id": "REQ-7",
+        "summary": "Ensure the admin access gate UX clearly distinguishes between (a) not being logged in with Internet Identity and (b) being logged in but not being an accepted admin principal, using English user-facing text.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/AccessDeniedScreen.tsx",
+          "frontend/src/components/AdminOrderManagementSection.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/AccessDeniedScreen.tsx",
+          "frontend/src/components/AdminOrderManagementSection.tsx"
+        ]
       }
     ]
   },
   "changedFiles": [
     "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/SiteFooter.tsx",
-    "frontend/src/context/AdminGateContext.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/AccessDeniedScreen.tsx",
+    "frontend/src/components/AdminOrderManagementSection.tsx",
+    "frontend/src/components/AdminPrincipalManagementSection.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useAdminAllowlistQueries.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

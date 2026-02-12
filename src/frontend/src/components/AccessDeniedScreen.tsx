@@ -27,8 +27,8 @@ export function AccessDeniedScreen({ isAuthenticated = false, onRetry, onLogin }
         <Alert variant="destructive">
           <AlertDescription>
             {isAuthenticated 
-              ? 'This section is restricted to administrators only. The first user to log in and access this section becomes the admin. If you believe you should have access, please contact the site administrator.'
-              : 'Please log in to access the admin section. The first authenticated user to access this section will automatically become the administrator.'}
+              ? 'This section is restricted to administrators only. You are logged in but not authorized as an admin. Please contact an existing administrator to be added to the admin list.'
+              : 'Please log in with your Internet Identity to access the admin section.'}
           </AlertDescription>
         </Alert>
         

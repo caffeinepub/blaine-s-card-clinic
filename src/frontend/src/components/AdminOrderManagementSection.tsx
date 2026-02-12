@@ -8,8 +8,9 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { CheckCircle2, AlertCircle, Package, Loader2, ShieldCheck, RefreshCw } from 'lucide-react';
-import { useCreateOrder, useUpdateOrderStatus, useGetAllOrders, useCheckIsAdmin, useInitializeAccessControl } from '@/hooks/useAdminOrderQueries';
+import { useCreateOrder, useUpdateOrderStatus, useGetAllOrders, useListAllOrders, useCheckIsAdmin, useInitializeAccessControl } from '@/hooks/useAdminOrderQueries';
 import { useInternetIdentity } from '@/hooks/useInternetIdentity';
 import { useAdminActor } from '@/hooks/useAdminActor';
 import { useAdminDiagnostics } from '@/hooks/useAdminDiagnostics';
@@ -17,7 +18,7 @@ import { AccessDeniedScreen } from './AccessDeniedScreen';
 import { AdminQuoteFormsSection } from './AdminQuoteFormsSection';
 import { AdminOrderTrackingSection } from './AdminOrderTrackingSection';
 import { AdminPrincipalManagementSection } from './AdminPrincipalManagementSection';
-import { OrderStatus } from '../backend';
+import { OrderStatus, CleaningType } from '../backend';
 import { getOrderStatusLabel } from '@/utils/orderStatusLabel';
 
 export function AdminOrderManagementSection() {
@@ -28,13 +29,21 @@ export function AdminOrderManagementSection() {
   const initializeAccessControl = useInitializeAccessControl();
   const [initializationState, setInitializationState] = useState<'idle' | 'initializing' | 'rechecking' | 'complete' | 'failed'>('idle');
   
+  // Create Order form state
   const [newTrackingNumber, setNewTrackingNumber] = useState('');
+  const [customerName, setCustomerName] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
+  const [numberOfCards, setNumberOfCards] = useState('');
+  const [cleaningType, setCleaningType] = useState<CleaningType | ''>('');
+  
+  // Update Status form state
   const [updateTrackingNumber, setUpdateTrackingNumber] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus>(OrderStatus.processing);
 
   const createOrderMutation = useCreateOrder();
   const updateOrderMutation = useUpdateOrderStatus();
   const { data: orders, isLoading: ordersLoading, error: ordersError } = useGetAllOrders();
+  const { data: allOrders, isLoading: allOrdersLoading, error: allOrdersError } = useListAllOrders();
 
   const isAuthenticated = !!identity;
 
@@ -102,14 +111,47 @@ export function AdminOrderManagementSection() {
     });
   };
 
+  // Email validation
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // Form validation
+  const isCreateFormValid = (): boolean => {
+    return (
+      newTrackingNumber.trim() !== '' &&
+      customerName.trim() !== '' &&
+      customerEmail.trim() !== '' &&
+      isValidEmail(customerEmail) &&
+      numberOfCards.trim() !== '' &&
+      parseInt(numberOfCards) > 0 &&
+      cleaningType !== ''
+    );
+  };
+
   const handleCreateOrder = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newTrackingNumber.trim()) {
-      createOrderMutation.mutate(newTrackingNumber.trim(), {
-        onSuccess: () => {
-          setNewTrackingNumber('');
+    if (isCreateFormValid()) {
+      createOrderMutation.mutate(
+        {
+          trackingNumber: newTrackingNumber.trim(),
+          customerName: customerName.trim(),
+          customerEmail: customerEmail.trim(),
+          numberOfCards: parseInt(numberOfCards),
+          cleaningType: cleaningType as CleaningType,
         },
-      });
+        {
+          onSuccess: () => {
+            // Clear all form fields
+            setNewTrackingNumber('');
+            setCustomerName('');
+            setCustomerEmail('');
+            setNumberOfCards('');
+            setCleaningType('');
+          },
+        }
+      );
     }
   };
 
@@ -153,6 +195,19 @@ export function AdminOrderManagementSection() {
         return <Badge variant="default" className="bg-green-600">{label}</Badge>;
       default:
         return <Badge variant="outline">{label}</Badge>;
+    }
+  };
+
+  const getCleaningTypeLabel = (type: CleaningType): string => {
+    switch (type) {
+      case CleaningType.superPotion:
+        return 'Super Potion';
+      case CleaningType.hyperPotion:
+        return 'Hyper Potion';
+      case CleaningType.maxPotion:
+        return 'Max Potion';
+      default:
+        return 'Unknown';
     }
   };
 
@@ -274,25 +329,86 @@ export function AdminOrderManagementSection() {
                 <CardHeader>
                   <CardTitle>Create New Order</CardTitle>
                   <CardDescription>
-                    Enter a tracking number to create a new order with initial status "Processing"
+                    Enter customer details and order information to create a new order
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <form onSubmit={handleCreateOrder} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="new-tracking">Tracking Number</Label>
-                      <Input
-                        id="new-tracking"
-                        type="text"
-                        placeholder="Enter tracking number"
-                        value={newTrackingNumber}
-                        onChange={(e) => setNewTrackingNumber(e.target.value)}
-                        disabled={createOrderMutation.isPending}
-                      />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="new-tracking">Tracking Number *</Label>
+                        <Input
+                          id="new-tracking"
+                          type="text"
+                          placeholder="Enter tracking number"
+                          value={newTrackingNumber}
+                          onChange={(e) => setNewTrackingNumber(e.target.value)}
+                          disabled={createOrderMutation.isPending}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="customer-name">Customer Name *</Label>
+                        <Input
+                          id="customer-name"
+                          type="text"
+                          placeholder="Enter customer name"
+                          value={customerName}
+                          onChange={(e) => setCustomerName(e.target.value)}
+                          disabled={createOrderMutation.isPending}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="customer-email">Customer Email *</Label>
+                        <Input
+                          id="customer-email"
+                          type="email"
+                          placeholder="customer@example.com"
+                          value={customerEmail}
+                          onChange={(e) => setCustomerEmail(e.target.value)}
+                          disabled={createOrderMutation.isPending}
+                        />
+                        {customerEmail && !isValidEmail(customerEmail) && (
+                          <p className="text-xs text-destructive">Please enter a valid email address</p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="number-of-cards">Number of Cards *</Label>
+                        <Input
+                          id="number-of-cards"
+                          type="number"
+                          min="1"
+                          placeholder="Enter number of cards"
+                          value={numberOfCards}
+                          onChange={(e) => setNumberOfCards(e.target.value)}
+                          disabled={createOrderMutation.isPending}
+                        />
+                      </div>
+
+                      <div className="space-y-2 md:col-span-2">
+                        <Label htmlFor="cleaning-type">Cleaning Type *</Label>
+                        <Select
+                          value={cleaningType}
+                          onValueChange={(value) => setCleaningType(value as CleaningType)}
+                          disabled={createOrderMutation.isPending}
+                        >
+                          <SelectTrigger id="cleaning-type">
+                            <SelectValue placeholder="Select cleaning type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value={CleaningType.superPotion}>Super Potion</SelectItem>
+                            <SelectItem value={CleaningType.hyperPotion}>Hyper Potion</SelectItem>
+                            <SelectItem value={CleaningType.maxPotion}>Max Potion</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
+
                     <Button
                       type="submit"
-                      disabled={createOrderMutation.isPending || !newTrackingNumber.trim()}
+                      disabled={createOrderMutation.isPending || !isCreateFormValid()}
                       className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                     >
                       {createOrderMutation.isPending ? (
@@ -423,50 +539,62 @@ export function AdminOrderManagementSection() {
                 <CardHeader>
                   <CardTitle>All Orders</CardTitle>
                   <CardDescription>
-                    View and manage all customer orders
+                    View and manage all orders in the system
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {ordersLoading && (
+                  {allOrdersLoading && (
                     <div className="flex items-center justify-center py-8">
                       <Loader2 className="h-6 w-6 animate-spin text-primary" />
                     </div>
                   )}
 
-                  {ordersError && (
+                  {allOrdersError && (
                     <Alert variant="destructive">
                       <AlertCircle className="h-4 w-4" />
                       <AlertDescription>
-                        Failed to load orders. Please try again.
+                        {allOrdersError instanceof Error
+                          ? allOrdersError.message
+                          : 'Failed to load orders'}
                       </AlertDescription>
                     </Alert>
                   )}
 
-                  {!ordersLoading && !ordersError && orders && orders.length === 0 && (
+                  {allOrders && allOrders.length === 0 && (
                     <div className="text-center py-8 text-muted-foreground">
-                      <p>No orders found</p>
+                      No orders found. Create your first order to get started.
                     </div>
                   )}
 
-                  {!ordersLoading && !ordersError && orders && orders.length > 0 && (
-                    <div className="rounded-md border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Tracking Number</TableHead>
-                            <TableHead>Status</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {orders.map(([trackingNumber, status]) => (
-                            <TableRow key={trackingNumber}>
-                              <TableCell className="font-medium">{trackingNumber}</TableCell>
-                              <TableCell>{getStatusBadge(status)}</TableCell>
+                  {allOrders && allOrders.length > 0 && (
+                    <ScrollArea className="w-full">
+                      <div className="min-w-[800px]">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Tracking Number</TableHead>
+                              <TableHead>Customer Name</TableHead>
+                              <TableHead>Email</TableHead>
+                              <TableHead className="text-center">Cards</TableHead>
+                              <TableHead>Cleaning Type</TableHead>
+                              <TableHead>Status</TableHead>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
+                          </TableHeader>
+                          <TableBody>
+                            {allOrders.map(([trackingNumber, order]) => (
+                              <TableRow key={trackingNumber}>
+                                <TableCell className="font-mono text-sm">{trackingNumber}</TableCell>
+                                <TableCell>{order.customerName || '-'}</TableCell>
+                                <TableCell className="text-sm">{order.customerEmail || '-'}</TableCell>
+                                <TableCell className="text-center">{order.numberOfCards.toString()}</TableCell>
+                                <TableCell>{getCleaningTypeLabel(order.cleaningType)}</TableCell>
+                                <TableCell>{getStatusBadge(order.status)}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </ScrollArea>
                   )}
                 </CardContent>
               </Card>

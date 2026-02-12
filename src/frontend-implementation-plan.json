@@ -1,27 +1,58 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Admin panel: view full quote form message text",
+  "title": "Admin order creation: capture customer details and cleaning type",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Keep Quote Forms table compact while adding a clear interaction to open a scrollable full-message view that preserves line breaks, without affecting ticket status actions.",
+      "id": "REQ-5",
+      "summary": "Extend the Admin Panel Create Order form to collect customer name, email, number of cards, and cleaning type.",
       "acceptanceCriteria": [
-        "In Quote Forms (frontend/src/components/AdminQuoteFormsSection.tsx), the message preview in the table is no longer the only way to access the content (currently truncated via `line-clamp-2`).",
-        "For any ticket with a long `ticket.formData.message`, an admin can open a full-message view and read the entire text.",
-        "The full-message view displays the exact message content, including new lines/paragraphs (no loss of whitespace meaning), and supports scrolling for very long messages.",
-        "The existing \"Mark Complete / Mark Pending\" action continues to work as before, and the new message viewing interaction does not interfere with it."
+        "Create Order tab shows inputs for Name, Email, Number of Cards, and a dropdown/select for Cleaning Type with exactly the three options provided.",
+        "Form validation prevents submission when required fields are missing/invalid (at minimum: tracking number non-empty; email looks like an email; number of cards is a positive integer).",
+        "On successful creation, the form clears all entered fields and shows the existing success alert."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/FullTicketMessageModal.tsx",
-          "operation": "create",
-          "description": "Create a small, composed (non-shadcn-ui-folder) modal/dialog component that renders the selected ticket message with preserved whitespace/line breaks and an internal scroll region for long content; include close interactions (e.g., close button + overlay click + Esc)."
+          "path": "frontend/src/components/AdminOrderManagementSection.tsx",
+          "operation": "modify",
+          "description": "Update the \"Create New Order\" tab UI to include controlled inputs for customer name/email, number of cards, and cleaning type. Use the shadcn-ui Input/Label/Select components (already used in this file) to keep consistent styling; verify the component's usage instructions before implementing. Add client-side validation (tracking non-empty, email format, cards positive integer, cleaning type selected) and disable submit until valid. On create success, clear tracking number + new fields while keeping the existing success alert behavior."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Update admin order React Query hooks to use the updated create/list backend capabilities and include new fields.",
+      "acceptanceCriteria": [
+        "useCreateOrder mutation sends the full payload (tracking number, name, email, number of cards, cleaning type).",
+        "Orders query returns data sufficient to render the new fields in the admin UI.",
+        "React Query cache invalidation still refreshes the orders list after creation/updates."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useAdminOrderQueries.ts",
+          "operation": "modify",
+          "description": "Adjust useCreateOrder to accept a full payload object and call the updated actor.createOrder(trackingNumber, customerName, customerEmail, numberOfCards, cleaningType). Update useGetAllOrders to query actor.listAllOrders() and return the richer Order records needed by the UI. Keep existing Unauthorized error mapping and React Query invalidation behavior (e.g., invalidate ['orders'] after create/update)."
         },
         {
-          "path": "frontend/src/components/AdminQuoteFormsSection.tsx",
+          "path": "frontend/src/components/AdminOrderManagementSection.tsx",
           "operation": "modify",
-          "description": "Add state to track the currently selected ticket/message, keep the table message cell compact (can remain line-clamped) but add an explicit \"View full\" interaction (button/link and/or clickable message cell) that opens FullTicketMessageModal; ensure the new interaction does not conflict with the existing Mark Complete/Mark Pending button behavior and click targets."
+          "description": "Wire the updated hooks into the admin UI: update the create-order submit handler to pass the full payload (including converting Number of Cards to bigint) and update the orders data usage to match the new query return type for rendering."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Display customer fields and cleaning type in the Admin Panel All Orders table with responsive readability.",
+      "acceptanceCriteria": [
+        "All Orders table includes columns for Name, Email, Cards, and Cleaning Type (in addition to Tracking Number and Status).",
+        "Displayed values match what was entered at order creation for the same tracking number.",
+        "Table remains readable on smaller screens (e.g., via wrapping, horizontal scroll container, or responsive column hiding) without removing access to the data."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AdminOrderManagementSection.tsx",
+          "operation": "modify",
+          "description": "Update the \"All Orders\" table to render each order’s customerName, customerEmail, numberOfCards, and cleaningType alongside tracking number and status. Use the existing shadcn-ui Table components (already used in this file) and add a small-screen-friendly container (e.g., horizontal scroll wrapper and/or cell wrapping) to preserve access to all columns; verify the component's usage instructions before implementing. Ensure cleaning type is displayed with user-friendly English labels matching the three options."
         }
       ]
     }

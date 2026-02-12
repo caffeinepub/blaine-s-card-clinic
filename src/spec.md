@@ -1,11 +1,15 @@
 # Specification
 
 ## Summary
-**Goal:** Let admins fully read long customer messages in the Quote Forms table without expanding the table layout.
+**Goal:** Allow admins to capture and view customer details and cleaning type when creating and managing orders.
 
 **Planned changes:**
-- Update the Quote Forms table in `frontend/src/components/AdminQuoteFormsSection.tsx` to keep a short message preview in the table while adding an explicit interaction to view the full message (e.g., click action or “View full” control).
-- Add a full-message view (dialog or drawer) that shows the complete `ticket.formData.message` with preserved line breaks/paragraphs and scrolling for very long text.
-- Ensure the existing “Mark Complete / Mark Pending” action continues to work unchanged and is not interfered with by the new message-viewing interaction.
+- Extend the backend Order model to store customer name, customer email, number of cards, and cleaning type (Super Potion / Hyper Potion / Max Potion) per tracking number.
+- Update backend admin order-creation to accept and persist the new customer fields with the initial status "Processing", enforcing admin-only access.
+- Update backend admin order listing to include the new customer fields in returned order records (admin-only access remains).
+- Add a backend state migration to preserve existing stored orders by backfilling new fields with safe defaults during upgrade.
+- Update the Admin Panel "Create New Order" form to collect name, email, number of cards, and cleaning type (dropdown) in addition to tracking number, with basic validation and form reset on success.
+- Update frontend admin React Query hooks to send/receive the new fields for order creation and listing.
+- Update the Admin Panel "All Orders" table to display name, email, cards, and cleaning type alongside tracking number and status, remaining readable on smaller screens.
 
-**User-visible outcome:** In the admin Quote Forms view, admins can open and read the entire customer message (including line breaks) for any ticket, even when the table preview is truncated.
+**User-visible outcome:** Admins can create orders with customer name/email, card count, and cleaning type, and can see those details in the admin orders list.

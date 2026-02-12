@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-admin-panel-quote-forms-table-so-long-customer-messages-are-fully-viewable-not-truncated-keep-the-table-compact-but-provide-an-explicit-interaction-to-read-the-entire-message-for-any-ticket-e-g-click-the-message-cell-or-a-view-full-action-that-opens-a-dialog-drawer-showing-the-full-text-with-preserved-line-breaks-and-scroll-when-needed",
-      "featureTitle": "Update the admin panel Quote Forms table so long customer messages are fully viewable (not truncated). Keep the table compact, but provide an explicit interaction to read the entire message for any ticket (e.g., click the message cell or a \"View full\" action that opens a dialog/drawer showing the full text with preserved line breaks and scroll when needed).",
+      "featureId": "feature-update-the-admin-panel-create-new-order-form-to-collect-customer-name-customer-email-number-of-cards-and-cleaning-type-selection-super-potion-hyper-potion-max-potion-in-addition-to-tracking-number",
+      "featureTitle": "Update the Admin Panel \"Create New Order\" form to collect: customer name, customer email, number of cards, and cleaning type selection (Super Potion / Hyper Potion / Max Potion) in addition to tracking number.",
       "files": [
-        "frontend/src/components/AdminQuoteFormsSection.tsx",
-        "frontend/src/components/FullTicketMessageModal.tsx"
+        "frontend/src/components/AdminOrderManagementSection.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -17,7 +16,46 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-1"
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-frontend-admin-order-react-query-hooks-to-call-the-updated-backend-order-creation-and-order-listing-apis-including-the-new-fields",
+      "featureTitle": "Update frontend admin order React Query hooks to call the updated backend order-creation and order-listing APIs (including the new fields).",
+      "files": [
+        "frontend/src/components/AdminOrderManagementSection.tsx",
+        "frontend/src/hooks/useAdminOrderQueries.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-admin-panel-all-orders-table-to-display-the-stored-customer-fields-name-email-number-of-cards-cleaning-type-alongside-tracking-number-and-status",
+      "featureTitle": "Update the Admin Panel \"All Orders\" table to display the stored customer fields (name, email, number of cards, cleaning type) alongside tracking number and status.",
+      "files": [
+        "frontend/src/components/AdminOrderManagementSection.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
       ],
       "confidence": "high"
     }

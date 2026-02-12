@@ -10,10 +10,22 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export type CleaningType = { 'maxPotion' : null } |
+  { 'superPotion' : null } |
+  { 'hyperPotion' : null };
 export interface FormData {
   'name' : string,
   'email' : string,
   'message' : string,
+}
+export interface Order {
+  'customerName' : string,
+  'status' : OrderStatus,
+  'trackingNumber' : string,
+  'numberOfCards' : bigint,
+  'timestamp' : Time,
+  'cleaningType' : CleaningType,
+  'customerEmail' : string,
 }
 export type OrderStatus = { 'shipped' : null } |
   { 'cleaningComplete' : null } |
@@ -55,7 +67,10 @@ export interface _SERVICE {
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'checkTrackingNumberStatus' : ActorMethod<[string], OrderStatus>,
   'completeRestorationStep' : ActorMethod<[string, bigint], undefined>,
-  'createOrder' : ActorMethod<[string], OrderStatus>,
+  'createOrder' : ActorMethod<
+    [string, string, string, bigint, CleaningType],
+    OrderStatus
+  >,
   'createTrackingState' : ActorMethod<[string, string], undefined>,
   'examineTrackingNumbers' : ActorMethod<[], Array<[string, OrderStatus]>>,
   'getAdminIds' : ActorMethod<[], Array<Principal>>,
@@ -75,6 +90,7 @@ export interface _SERVICE {
   'initializeAccessControl' : ActorMethod<[], undefined>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'isTicketCompleted' : ActorMethod<[string], boolean>,
+  'listAllOrders' : ActorMethod<[], Array<[string, Order]>>,
   'listAllTickets' : ActorMethod<[], Array<[string, Ticket]>>,
   'markPackageArrived' : ActorMethod<[string], undefined>,
   'markShipped' : ActorMethod<[string], undefined>,

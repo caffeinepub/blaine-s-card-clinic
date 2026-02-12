@@ -1,37 +1,93 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-12T20:53:48.014Z",
+  "generatedAt": "2026-02-12T23:00:54.159Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
-    "implemented": 1,
+    "total": 7,
+    "implemented": 3,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Update the admin panel Quote Forms table so long customer messages are fully viewable (not truncated). Keep the table compact, but provide an explicit interaction to read the entire message for any ticket (e.g., click the message cell or a \"View full\" action that opens a dialog/drawer showing the full text with preserved line breaks and scroll when needed).",
+        "summary": "Extend the backend Order data model to store customer details for each order: customer name, customer email, number of cards, and cleaning type (Super Potion, Hyper Potion, Max Potion).",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Update backend order creation to accept and persist the new customer fields when creating an order from the admin panel.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Update backend admin order listing to return order records including the new customer fields so the admin UI can display them.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Add a state migration to preserve existing stored orders when upgrading the Order type (backfill new fields with safe defaults).",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Update the Admin Panel \"Create New Order\" form to collect: customer name, customer email, number of cards, and cleaning type selection (Super Potion / Hyper Potion / Max Potion) in addition to tracking number.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/FullTicketMessageModal.tsx",
-          "frontend/src/components/AdminQuoteFormsSection.tsx"
+          "frontend/src/components/AdminOrderManagementSection.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/FullTicketMessageModal.tsx",
-          "frontend/src/components/AdminQuoteFormsSection.tsx"
+          "frontend/src/components/AdminOrderManagementSection.tsx"
+        ]
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Update frontend admin order React Query hooks to call the updated backend order-creation and order-listing APIs (including the new fields).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useAdminOrderQueries.ts",
+          "frontend/src/components/AdminOrderManagementSection.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useAdminOrderQueries.ts",
+          "frontend/src/components/AdminOrderManagementSection.tsx"
+        ]
+      },
+      {
+        "id": "REQ-7",
+        "summary": "Update the Admin Panel \"All Orders\" table to display the stored customer fields (name, email, number of cards, cleaning type) alongside tracking number and status.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/AdminOrderManagementSection.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/AdminOrderManagementSection.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/AdminQuoteFormsSection.tsx",
-    "frontend/src/components/FullTicketMessageModal.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/AdminOrderManagementSection.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useAdminOrderQueries.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

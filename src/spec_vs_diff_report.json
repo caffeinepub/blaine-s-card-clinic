@@ -1,39 +1,69 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-12T20:53:48.012Z",
-  "summary": "REQ-1 is partially evidenced: a new dialog modal component exists to show the full ticket message with preserved line breaks and scrolling, and AdminQuoteFormsSection wiring for selecting a ticket/message view is present. However, the AdminQuoteFormsSection diff is truncated, so it cannot be fully verified that the table provides a working explicit interaction (e.g., click/view action) and that the truncated preview is no longer the only way to access the content, nor that the existing Mark Complete/Pending action remains unaffected.",
+  "generatedAt": "2026-02-12T23:00:54.157Z",
+  "summary": "Diff adds a backend state migration for new customer/order fields and updates frontend admin hooks and component state to handle customer details and cleaning type. However, the diff summary does not provide enough evidence that the backend Order type and admin APIs were updated accordingly, nor that the admin UI form/table fully implement the required inputs, validation, and display columns. The migration also introduces additional order statuses not requested.",
   "missing_requirements": [
     {
       "id": "REQ-1",
-      "requirement": "In Quote Forms (frontend/src/components/AdminQuoteFormsSection.tsx), the message preview in the table is no longer the only way to access the content (currently truncated via `line-clamp-2`), and an explicit interaction exists to open a full-message view for any ticket without interfering with Mark Complete / Mark Pending.",
-      "reason": "Although a FullTicketMessageModal was added and AdminQuoteFormsSection includes state/handler for viewing a message, the AdminQuoteFormsSection change is truncated and does not show the actual table cell/action UI (e.g., removing/keeping `line-clamp-2`, adding a 'View full' button/click handler), nor does it show the Mark Complete/Pending action section to confirm it is unchanged and non-interfering.",
+      "requirement": "Extend the backend Order data model to store customerName, customerEmail, numberOfCards, and cleaningType (Super/Hyper/Max) and persist per tracking number.",
+      "reason": "backend/migration.mo defines a NewOrder type with these fields, but the diff summary for backend/main.mo is truncated and does not show the actual persisted Order type used by the canister or its storage being updated to include/persist these fields.",
       "evidence": [
-        "frontend/src/components/AdminQuoteFormsSection.tsx (truncated)"
+        "backend/main.mo (truncated)",
+        "backend/migration.mo"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "requirement": "Update backend order creation API to accept tracking number + name/email/numberOfCards/cleaningType, persist them with initial status Processing, and enforce admin Unauthorized for non-admins.",
+      "reason": "Frontend hook calls actor.createOrder with the new parameters, but the backend implementation/signature and its admin-guard behavior are not shown in the truncated backend/main.mo diff.",
+      "evidence": [
+        "frontend/src/hooks/useAdminOrderQueries.ts",
+        "backend/main.mo (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "requirement": "Update backend admin list-all-orders endpoint to include the new customer fields and keep admin-only permission checks.",
+      "reason": "Frontend useListAllOrders expects actor.listAllOrders to return Order records, but the backend listAllOrders implementation/return type (including customer fields + permission checks) is not shown in the truncated backend/main.mo diff.",
+      "evidence": [
+        "frontend/src/hooks/useAdminOrderQueries.ts",
+        "backend/main.mo (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "requirement": "Admin 'Create New Order' form collects name, email, number of cards (positive int), and cleaning type select with exactly Super/Hyper/Max, validates inputs, and clears fields on success.",
+      "reason": "AdminOrderManagementSection.tsx shows new React state variables and Select imports, but the diff is truncated before showing the rendered form, validation logic, exact select options, and post-success form reset behavior.",
+      "evidence": [
+        "frontend/src/components/AdminOrderManagementSection.tsx (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "requirement": "Admin 'All Orders' table displays Name, Email, Cards, Cleaning Type columns alongside tracking number and status, and remains readable on small screens.",
+      "reason": "AdminOrderManagementSection.tsx imports table components and ScrollArea, but the diff is truncated and does not show the table columns/cells rendering the new fields or any responsive/readability handling.",
+      "evidence": [
+        "frontend/src/components/AdminOrderManagementSection.tsx (truncated)"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Large set of unrelated frontend changes (admin gate, header/footer quick links, hero/service tier/pricing updates, tracking section, color palette updates, asset URL helper, etc.)",
-      "reason": "These changes are described in the modified frontend-file-summaries.txt but are not requested by the BuildRequest (which is a UI-only fix to the admin quote viewer).",
+      "description": "Added multiple new order statuses beyond what was requested (packageReceived, inspectionComplete, cleaningComplete, inPress, finalTouches).",
+      "reason": "BuildRequest only asked to add customer details and cleaning type fields; it did not request expanding the OrderStatus variant with additional states.",
       "evidence": [
-        "frontend-file-summaries.txt (truncated)"
-      ]
-    },
-    {
-      "description": "Modification of project_state.json to add/track feature requests (AR-1/AR-2)",
-      "reason": "BuildRequest does not request updating project metadata/state files.",
-      "evidence": [
-        "project_state.json"
+        "backend/migration.mo"
       ]
     }
   ],
-  "confidence": 0.56,
+  "confidence": 0.62,
   "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/AdminQuoteFormsSection.tsx",
-    "frontend/src/components/FullTicketMessageModal.tsx",
+    "frontend/src/components/AdminOrderManagementSection.tsx",
+    "frontend/src/hooks/useAdminOrderQueries.ts",
     "project_state.json"
   ]
 }

@@ -1,36 +1,132 @@
 {
   "kind": "build_request",
-  "title": "Admin panel: allow viewing full quote form message text",
+  "title": "Admin: Add customer details and cleaning type to order creation",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Update the admin panel Quote Forms table so long customer messages are fully viewable (not truncated). Keep the table compact, but provide an explicit interaction to read the entire message for any ticket (e.g., click the message cell or a \"View full\" action that opens a dialog/drawer showing the full text with preserved line breaks and scroll when needed).",
+      "text": "Extend the backend Order data model to store customer details for each order: customer name, customer email, number of cards, and cleaning type (Super Potion, Hyper Potion, Max Potion).",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Can you make it in the admin panel when you create an order you can add a name,  email, number of cards, and type of cleaning being performed (Super Potion, Hyper Potion, Max Potion)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Motoko Order type includes fields for customer name (Text), customer email (Text), number of cards (Nat), and cleaning type (enum/variant).",
+        "Cleaning type supports exactly these user-selectable values: Super Potion, Hyper Potion, Max Potion.",
+        "Order storage persists these new fields per tracking number."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Update backend order creation to accept and persist the new customer fields when creating an order from the admin panel.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "when you create an order you can add a name,  email, number of cards, and type of cleaning being performed (Super Potion, Hyper Potion, Max Potion)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend exposes an order-creation method that accepts tracking number plus name, email, number of cards, and cleaning type.",
+        "Creating an order stores the customer fields alongside the initial status \"Processing\".",
+        "Attempting to create an order without admin permission returns an Unauthorized error (to prevent public creation of orders containing customer info)."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Update backend admin order listing to return order records including the new customer fields so the admin UI can display them.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin list-all-orders endpoint returns order entries that include tracking number, status, and the stored customer fields.",
+        "Existing admin-only permission checks remain enforced for listing orders."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Add a state migration to preserve existing stored orders when upgrading the Order type (backfill new fields with safe defaults).",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A conditional migration is added (backend/migration.mo) to transform existing order entries to the new Order structure without losing tracking number/status/timestamp.",
+        "Backfilled defaults are non-breaking (e.g., empty name/email, 0 card count, and a default/unknown cleaning type as needed).",
+        "Upgrade completes successfully with pre-existing state present."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Update the Admin Panel \"Create New Order\" form to collect: customer name, customer email, number of cards, and cleaning type selection (Super Potion / Hyper Potion / Max Potion) in addition to tracking number.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "When going through the admin panel to look at the quote forms, if the customer types a longer description it can not be seen. Can you make it to where the entire message can be seen?"
+          "in the admin panel when you create an order you can add a name,  email, number of cards, and type of cleaning being performed (Super Potion, Hyper Potion, Max Potion)"
         ]
       },
       "acceptanceCriteria": [
-        "In Quote Forms (frontend/src/components/AdminQuoteFormsSection.tsx), the message preview in the table is no longer the only way to access the content (currently truncated via `line-clamp-2`).",
-        "For any ticket with a long `ticket.formData.message`, an admin can open a full-message view and read the entire text.",
-        "The full-message view displays the exact message content, including new lines/paragraphs (no loss of whitespace meaning), and supports scrolling for very long messages.",
-        "The existing \"Mark Complete / Mark Pending\" action continues to work as before, and the new message viewing interaction does not interfere with it."
+        "Create Order tab shows inputs for Name, Email, Number of Cards, and a dropdown/select for Cleaning Type with exactly the three options provided.",
+        "Form validation prevents submission when required fields are missing/invalid (at minimum: tracking number non-empty; email looks like an email; number of cards is a positive integer).",
+        "On successful creation, the form clears all entered fields and shows the existing success alert."
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Update frontend admin order React Query hooks to call the updated backend order-creation and order-listing APIs (including the new fields).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ]
+      },
+      "acceptanceCriteria": [
+        "useCreateOrder mutation sends the full payload (tracking number, name, email, number of cards, cleaning type).",
+        "Orders query returns data sufficient to render the new fields in the admin UI.",
+        "React Query cache invalidation still refreshes the orders list after creation/updates."
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Update the Admin Panel \"All Orders\" table to display the stored customer fields (name, email, number of cards, cleaning type) alongside tracking number and status.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All Orders table includes columns for Name, Email, Cards, and Cleaning Type (in addition to Tracking Number and Status).",
+        "Displayed values match what was entered at order creation for the same tracking number.",
+        "Table remains readable on smaller screens (e.g., via wrapping, horizontal scroll container, or responsive column hiding) without removing access to the data."
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files under frontend/src/components/ui (shadcn components must be composed, not edited).",
-    "Keep all backend logic unchanged; this is a UI-only fix to the admin quote viewer."
+    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
+    "Only generate backend/migration.mo if needed to preserve/upgrade existing persisted state.",
+    "Do not edit files under frontend/src/components/ui or any paths listed in frontend immutablePaths (compose existing UI components instead).",
+    "Use English for all user-facing UI text."
   ],
   "nonGoals": [
-    "Changing what customers submit in the quote form (validation, max length, fields).",
-    "Changing ticket storage format or backend schema.",
-    "Adding search/filter/export for quote forms."
+    "Do not add third-party authentication providers; keep Internet Identity only.",
+    "Do not add payments, notifications, or real-time features.",
+    "Do not change public package tracking UI/behavior beyond what is necessary for backend type/API compatibility."
   ],
   "imageRequirements": {
     "required": [],

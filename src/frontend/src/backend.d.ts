@@ -23,6 +23,15 @@ export interface Ticket {
     formData: FormData;
     category: string;
 }
+export interface Order {
+    customerName: string;
+    status: OrderStatus;
+    trackingNumber: string;
+    numberOfCards: bigint;
+    timestamp: Time;
+    cleaningType: CleaningType;
+    customerEmail: string;
+}
 export interface UserProfile {
     name: string;
     email: string;
@@ -34,6 +43,11 @@ export interface TrackingStateView {
     restorationLevel: string;
     steps: Array<RestorationStep>;
     shippingTimestamp?: Time;
+}
+export enum CleaningType {
+    maxPotion = "maxPotion",
+    superPotion = "superPotion",
+    hyperPotion = "hyperPotion"
 }
 export enum OrderStatus {
     shipped = "shipped",
@@ -58,7 +72,7 @@ export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     checkTrackingNumberStatus(trackingNumber: string): Promise<OrderStatus>;
     completeRestorationStep(trackingCode: string, index: bigint): Promise<void>;
-    createOrder(trackingNumber: string): Promise<OrderStatus>;
+    createOrder(trackingNumber: string, customerName: string, customerEmail: string, numberOfCards: bigint, cleaningType: CleaningType): Promise<OrderStatus>;
     createTrackingState(trackingCode: string, restorationLevel: string): Promise<void>;
     examineTrackingNumbers(): Promise<Array<[string, OrderStatus]>>;
     getAdminIds(): Promise<Array<Principal>>;
@@ -75,6 +89,7 @@ export interface backendInterface {
     initializeAccessControl(): Promise<void>;
     isCallerAdmin(): Promise<boolean>;
     isTicketCompleted(email: string): Promise<boolean>;
+    listAllOrders(): Promise<Array<[string, Order]>>;
     listAllTickets(): Promise<Array<[string, Ticket]>>;
     markPackageArrived(trackingCode: string): Promise<void>;
     markShipped(trackingCode: string): Promise<void>;

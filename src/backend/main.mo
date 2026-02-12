@@ -9,9 +9,9 @@ import Principal "mo:core/Principal";
 
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
- // separate migration module
+import Migration "migration";
 
-
+(with migration = Migration.run)
 actor {
   var initialized = false; // Persistent initialization flag
   let adminIds = Set.empty<Principal>();
@@ -365,20 +365,37 @@ actor {
     #finalTouches; // New - final adjustments before shipping
   };
 
+  public type CleaningType = {
+    #superPotion;
+    #hyperPotion;
+    #maxPotion;
+  };
+
   public type Order = {
     trackingNumber : Text;
     status : OrderStatus;
     timestamp : Time.Time;
+    customerName : Text;
+    customerEmail : Text;
+    numberOfCards : Nat;
+    cleaningType : CleaningType;
   };
 
   let orders = Map.empty<Text, Order>();
 
-  // Public - anyone can create an order with a tracking number
-  public shared ({ caller }) func createOrder(trackingNumber : Text) : async OrderStatus {
+  // Admin only - creating orders from admin panel
+  public shared ({ caller }) func createOrder(trackingNumber : Text, customerName : Text, customerEmail : Text, numberOfCards : Nat, cleaningType : CleaningType) : async OrderStatus {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can create orders");
+    };
     let order : Order = {
       trackingNumber;
       status = #processing;
       timestamp = Time.now();
+      customerName;
+      customerEmail;
+      numberOfCards;
+      cleaningType;
     };
     orders.add(trackingNumber, order);
     #processing;
@@ -444,5 +461,13 @@ actor {
     };
 
     results.toArray();
+  };
+
+  // Admin only - list all orders with customer details
+  public query ({ caller }) func listAllOrders() : async [(Text, Order)] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can list all orders");
+    };
+    orders.toArray();
   };
 };

@@ -1,19 +1,33 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAdminActor } from './useAdminActor';
-import { OrderStatus } from '../backend';
+import { OrderStatus, CleaningType, Order } from '../backend';
+
+interface CreateOrderPayload {
+  trackingNumber: string;
+  customerName: string;
+  customerEmail: string;
+  numberOfCards: number;
+  cleaningType: CleaningType;
+}
 
 export function useCreateOrder() {
   const { actor } = useAdminActor();
   const queryClient = useQueryClient();
 
-  return useMutation<OrderStatus, Error, string>({
-    mutationFn: async (trackingNumber: string) => {
+  return useMutation<OrderStatus, Error, CreateOrderPayload>({
+    mutationFn: async (payload: CreateOrderPayload) => {
       if (!actor) {
         throw new Error('Unable to connect to the service. Please try again later.');
       }
 
       try {
-        const status = await actor.createOrder(trackingNumber);
+        const status = await actor.createOrder(
+          payload.trackingNumber,
+          payload.customerName,
+          payload.customerEmail,
+          BigInt(payload.numberOfCards),
+          payload.cleaningType
+        );
         return status;
       } catch (error: any) {
         if (error.message?.includes('Unauthorized')) {
@@ -24,6 +38,7 @@ export function useCreateOrder() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
+      queryClient.invalidateQueries({ queryKey: ['allOrders'] });
     },
   });
 }
@@ -53,6 +68,7 @@ export function useUpdateOrderStatus() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
+      queryClient.invalidateQueries({ queryKey: ['allOrders'] });
     },
   });
 }
@@ -69,6 +85,31 @@ export function useGetAllOrders() {
 
       try {
         const orders = await actor.examineTrackingNumbers();
+        return orders;
+      } catch (error: any) {
+        if (error.message?.includes('Unauthorized')) {
+          throw new Error('You do not have permission to view orders');
+        }
+        throw new Error(error.message || 'Failed to fetch orders');
+      }
+    },
+    enabled: !!actor && !actorFetching,
+    retry: false,
+  });
+}
+
+export function useListAllOrders() {
+  const { actor, isFetching: actorFetching } = useAdminActor();
+
+  return useQuery<Array<[string, Order]>, Error>({
+    queryKey: ['allOrders'],
+    queryFn: async () => {
+      if (!actor) {
+        throw new Error('Unable to connect to the service');
+      }
+
+      try {
+        const orders = await actor.listAllOrders();
         return orders;
       } catch (error: any) {
         if (error.message?.includes('Unauthorized')) {

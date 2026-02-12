@@ -23,6 +23,11 @@ export const OrderStatus = IDL.Variant({
   'delivered' : IDL.Null,
   'processing' : IDL.Null,
 });
+export const CleaningType = IDL.Variant({
+  'maxPotion' : IDL.Null,
+  'superPotion' : IDL.Null,
+  'hyperPotion' : IDL.Null,
+});
 export const UserProfile = IDL.Record({
   'name' : IDL.Text,
   'email' : IDL.Text,
@@ -40,6 +45,15 @@ export const TrackingStateView = IDL.Record({
   'restorationLevel' : IDL.Text,
   'steps' : IDL.Vec(RestorationStep),
   'shippingTimestamp' : IDL.Opt(Time),
+});
+export const Order = IDL.Record({
+  'customerName' : IDL.Text,
+  'status' : OrderStatus,
+  'trackingNumber' : IDL.Text,
+  'numberOfCards' : IDL.Nat,
+  'timestamp' : Time,
+  'cleaningType' : CleaningType,
+  'customerEmail' : IDL.Text,
 });
 export const FormData = IDL.Record({
   'name' : IDL.Text,
@@ -61,7 +75,11 @@ export const idlService = IDL.Service({
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'checkTrackingNumberStatus' : IDL.Func([IDL.Text], [OrderStatus], ['query']),
   'completeRestorationStep' : IDL.Func([IDL.Text, IDL.Nat], [], []),
-  'createOrder' : IDL.Func([IDL.Text], [OrderStatus], []),
+  'createOrder' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Nat, CleaningType],
+      [OrderStatus],
+      [],
+    ),
   'createTrackingState' : IDL.Func([IDL.Text, IDL.Text], [], []),
   'examineTrackingNumbers' : IDL.Func(
       [],
@@ -100,6 +118,11 @@ export const idlService = IDL.Service({
   'initializeAccessControl' : IDL.Func([], [], []),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isTicketCompleted' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+  'listAllOrders' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(IDL.Text, Order))],
+      ['query'],
+    ),
   'listAllTickets' : IDL.Func(
       [],
       [IDL.Vec(IDL.Tuple(IDL.Text, Ticket))],
@@ -135,6 +158,11 @@ export const idlFactory = ({ IDL }) => {
     'delivered' : IDL.Null,
     'processing' : IDL.Null,
   });
+  const CleaningType = IDL.Variant({
+    'maxPotion' : IDL.Null,
+    'superPotion' : IDL.Null,
+    'hyperPotion' : IDL.Null,
+  });
   const UserProfile = IDL.Record({ 'name' : IDL.Text, 'email' : IDL.Text });
   const Time = IDL.Int;
   const RestorationStep = IDL.Record({
@@ -149,6 +177,15 @@ export const idlFactory = ({ IDL }) => {
     'restorationLevel' : IDL.Text,
     'steps' : IDL.Vec(RestorationStep),
     'shippingTimestamp' : IDL.Opt(Time),
+  });
+  const Order = IDL.Record({
+    'customerName' : IDL.Text,
+    'status' : OrderStatus,
+    'trackingNumber' : IDL.Text,
+    'numberOfCards' : IDL.Nat,
+    'timestamp' : Time,
+    'cleaningType' : CleaningType,
+    'customerEmail' : IDL.Text,
   });
   const FormData = IDL.Record({
     'name' : IDL.Text,
@@ -174,7 +211,11 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'completeRestorationStep' : IDL.Func([IDL.Text, IDL.Nat], [], []),
-    'createOrder' : IDL.Func([IDL.Text], [OrderStatus], []),
+    'createOrder' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Nat, CleaningType],
+        [OrderStatus],
+        [],
+      ),
     'createTrackingState' : IDL.Func([IDL.Text, IDL.Text], [], []),
     'examineTrackingNumbers' : IDL.Func(
         [],
@@ -213,6 +254,11 @@ export const idlFactory = ({ IDL }) => {
     'initializeAccessControl' : IDL.Func([], [], []),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isTicketCompleted' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+    'listAllOrders' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Text, Order))],
+        ['query'],
+      ),
     'listAllTickets' : IDL.Func(
         [],
         [IDL.Vec(IDL.Tuple(IDL.Text, Ticket))],

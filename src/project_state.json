@@ -1,18 +1,32 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
+  "summary": "Admin panel should support creating orders with customer details and cleaning options.",
   "architectural_notes": [],
-  "known_issues": [
-    "Admin panel quote form viewer truncates long customer descriptions; full message cannot be seen."
-  ],
-  "isFixRequest": true,
+  "known_issues": [],
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-update-the-admin-panel-quote-forms-table-so-long-customer-messages-are-fully-viewable-not-truncated-keep-the-table-compact-but-provide-an-explicit-interaction-to-read-the-entire-message-for-any-ticket-e-g-click-the-message-cell-or-a-view-full-action-that-opens-a-dialog-drawer-showing-the-full-text-with-preserved-line-breaks-and-scroll-when-needed",
-      "title": "Update the admin panel Quote Forms table so long customer messages are fully viewable (not truncated). Keep the table compact, but provide an explicit interaction to read the entire message for any ticket (e.g., click the message cell or a \"View full\" action that opens a dialog/drawer showing the full text with preserved line breaks and scroll when needed).",
+      "id": "feature-update-the-admin-panel-create-new-order-form-to-collect-customer-name-customer-email-number-of-cards-and-cleaning-type-selection-super-potion-hyper-potion-max-potion-in-addition-to-tracking-number",
+      "title": "Update the Admin Panel \"Create New Order\" form to collect: customer name, customer email, number of cards, and cleaning type selection (Super Potion / Hyper Potion / Max Potion) in addition to tracking number.",
       "reqIds": [
-        "REQ-1"
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-frontend-admin-order-react-query-hooks-to-call-the-updated-backend-order-creation-and-order-listing-apis-including-the-new-fields",
+      "title": "Update frontend admin order React Query hooks to call the updated backend order-creation and order-listing APIs (including the new fields).",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-admin-panel-all-orders-table-to-display-the-stored-customer-fields-name-email-number-of-cards-cleaning-type-alongside-tracking-number-and-status",
+      "title": "Update the Admin Panel \"All Orders\" table to display the stored customer fields (name, email, number of cards, cleaning type) alongside tracking number and status.",
+      "reqIds": [
+        "REQ-7"
       ],
       "version": 1
     }
@@ -20,12 +34,44 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Admin panel: show full customer quote form description/message (no truncation; allow viewing entire text)",
+      "summary": "Admin panel: when creating an order, allow entering customer name, email, number of cards, and selecting cleaning type (Super Potion, Hyper Potion, Max Potion)",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Extend the backend Order data model to store customer details for each order: customer name, customer email, number of cards, and cleaning type (Super Potion, Hyper Potion, Max Potion).",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Update backend order creation to accept and persist the new customer fields when creating an order from the admin panel.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Update backend admin order listing to return order records including the new customer fields so the admin UI can display them.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Add a state migration to preserve existing stored orders when upgrading the Order type (backfill new fields with safe defaults).",
+      "reqIds": [
+        "REQ-4"
+      ],
       "status": "pending"
     }
   ],
-  "projectName": "Admin panel: allow viewing full quote form message text",
+  "projectName": "Admin: Add customer details and cleaning type to order creation",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

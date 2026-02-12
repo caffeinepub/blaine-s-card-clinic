@@ -1,27 +1,18 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "App with authentication for an admin/login panel (currently shared admin password and a single accepted internet account); deployed builds under review.",
-  "architectural_notes": [
-    "Current setup uses a single shared admin password (no individual admin user accounts).",
-    "Access to the login/admin panel currently requires logging in with an internet account (single accepted account)."
+  "summary": "New project",
+  "architectural_notes": [],
+  "known_issues": [
+    "Admin panel quote form viewer truncates long customer descriptions; full message cannot be seen."
   ],
-  "known_issues": [],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-expose-a-simple-ui-in-the-existing-admin-panel-to-manage-accepted-internet-identity-accounts-display-the-current-list-of-accepted-admin-principals-and-provide-a-form-to-add-another-principal",
-      "title": "Expose a simple UI in the existing admin panel to manage accepted Internet Identity accounts: display the current list of accepted admin principals and provide a form to add another principal.",
+      "id": "feature-update-the-admin-panel-quote-forms-table-so-long-customer-messages-are-fully-viewable-not-truncated-keep-the-table-compact-but-provide-an-explicit-interaction-to-read-the-entire-message-for-any-ticket-e-g-click-the-message-cell-or-a-view-full-action-that-opens-a-dialog-drawer-showing-the-full-text-with-preserved-line-breaks-and-scroll-when-needed",
+      "title": "Update the admin panel Quote Forms table so long customer messages are fully viewable (not truncated). Keep the table compact, but provide an explicit interaction to read the entire message for any ticket (e.g., click the message cell or a \"View full\" action that opens a dialog/drawer showing the full text with preserved line breaks and scroll when needed).",
       "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-ensure-the-admin-access-gate-ux-clearly-distinguishes-between-a-not-being-logged-in-with-internet-identity-and-b-being-logged-in-but-not-being-an-accepted-admin-principal-using-english-user-facing-text",
-      "title": "Ensure the admin access gate UX clearly distinguishes between (a) not being logged in with Internet Identity and (b) being logged in but not being an accepted admin principal, using English user-facing text.",
-      "reqIds": [
-        "REQ-7"
+        "REQ-1"
       ],
       "version": 1
     }
@@ -29,34 +20,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Support adding additional admins (e.g., multiple admin passwords or individual admin accounts) instead of a single shared admin password.",
+      "summary": "Admin panel: show full customer quote form description/message (no truncation; allow viewing entire text)",
       "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Allow adding additional accepted internet accounts for accessing the login/admin panel (support multiple allowed accounts).",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-3",
-      "summary": "Update backend access control so more than one Internet Identity principal can be granted admin access (i.e., multiple accepted accounts can pass the admin permission check), rather than only the first authenticated principal implicitly becoming the only admin.",
-      "reqIds": [
-        "REQ-4"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Add backend admin-management endpoints to: (1) list currently accepted admin principals, and (2) add an additional admin principal, restricted so that only existing admins can manage the admin allowlist.",
-      "reqIds": [
-        "REQ-5"
-      ],
       "status": "pending"
     }
   ],
-  "projectName": "Allow multiple Internet Identity principals to access the admin/login panel",
+  "projectName": "Admin panel: allow viewing full quote form message text",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

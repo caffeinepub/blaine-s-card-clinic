@@ -4,13 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { CheckCircle2, AlertCircle, Loader2, Mail, User, MessageSquare } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Loader2, Mail, User, MessageSquare, Eye } from 'lucide-react';
 import { useListAllTickets, useUpdateTicketStatus } from '@/hooks/useAdminTicketQueries';
+import { FullTicketMessageModal } from './FullTicketMessageModal';
+import type { Ticket } from '@/backend';
 
 export function AdminQuoteFormsSection() {
   const { data: tickets, isLoading, error } = useListAllTickets();
   const updateStatusMutation = useUpdateTicketStatus();
   const [updatingEmail, setUpdatingEmail] = useState<string | null>(null);
+  const [selectedTicket, setSelectedTicket] = useState<{ email: string; ticket: Ticket } | null>(null);
 
   const handleToggleStatus = (email: string, currentStatus: boolean) => {
     setUpdatingEmail(email);
@@ -22,6 +25,10 @@ export function AdminQuoteFormsSection() {
         },
       }
     );
+  };
+
+  const handleViewMessage = (email: string, ticket: Ticket) => {
+    setSelectedTicket({ email, ticket });
   };
 
   if (isLoading) {
@@ -76,96 +83,116 @@ export function AdminQuoteFormsSection() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Quote Forms</CardTitle>
-        <CardDescription>
-          View and manage submitted quote requests ({tickets.length} total)
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Message</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {tickets.map(([email, ticket]) => (
-                <TableRow key={email}>
-                  <TableCell className="font-medium">
-                    <div className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-muted-foreground" />
-                      {ticket.formData.name}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm">{email}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="max-w-xs">
-                    <div className="flex items-start gap-2">
-                      <MessageSquare className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-                      <span className="text-sm line-clamp-2">{ticket.formData.message}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{ticket.category}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    {ticket.completed ? (
-                      <Badge variant="default" className="bg-green-600">
-                        <CheckCircle2 className="h-3 w-3 mr-1" />
-                        Completed
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary">Pending</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button
-                      size="sm"
-                      variant={ticket.completed ? 'outline' : 'default'}
-                      onClick={() => handleToggleStatus(email, ticket.completed)}
-                      disabled={updatingEmail === email}
-                    >
-                      {updatingEmail === email ? (
-                        <>
-                          <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-                          Updating...
-                        </>
-                      ) : ticket.completed ? (
-                        'Mark Pending'
-                      ) : (
-                        'Mark Complete'
-                      )}
-                    </Button>
-                  </TableCell>
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>Quote Forms</CardTitle>
+          <CardDescription>
+            View and manage submitted quote requests ({tickets.length} total)
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Message</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+              </TableHeader>
+              <TableBody>
+                {tickets.map(([email, ticket]) => (
+                  <TableRow key={email}>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        <User className="h-4 w-4 text-muted-foreground" />
+                        {ticket.formData.name}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm">{email}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="max-w-xs">
+                      <div className="flex items-start gap-2">
+                        <MessageSquare className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <span className="text-sm line-clamp-2 block">{ticket.formData.message}</span>
+                          <Button
+                            variant="link"
+                            size="sm"
+                            className="h-auto p-0 text-xs mt-1"
+                            onClick={() => handleViewMessage(email, ticket)}
+                          >
+                            <Eye className="h-3 w-3 mr-1" />
+                            View full message
+                          </Button>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{ticket.category}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      {ticket.completed ? (
+                        <Badge variant="default" className="bg-green-600">
+                          <CheckCircle2 className="h-3 w-3 mr-1" />
+                          Completed
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary">Pending</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        size="sm"
+                        variant={ticket.completed ? 'outline' : 'default'}
+                        onClick={() => handleToggleStatus(email, ticket.completed)}
+                        disabled={updatingEmail === email}
+                      >
+                        {updatingEmail === email ? (
+                          <>
+                            <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                            Updating...
+                          </>
+                        ) : ticket.completed ? (
+                          'Mark Pending'
+                        ) : (
+                          'Mark Complete'
+                        )}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
 
-        {updateStatusMutation.isError && (
-          <Alert variant="destructive" className="mt-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              {updateStatusMutation.error instanceof Error
-                ? updateStatusMutation.error.message
-                : 'Failed to update ticket status. Please try again.'}
-            </AlertDescription>
-          </Alert>
-        )}
-      </CardContent>
-    </Card>
+          {updateStatusMutation.isError && (
+            <Alert variant="destructive" className="mt-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                {updateStatusMutation.error instanceof Error
+                  ? updateStatusMutation.error.message
+                  : 'Failed to update ticket status. Please try again.'}
+              </AlertDescription>
+            </Alert>
+          )}
+        </CardContent>
+      </Card>
+
+      <FullTicketMessageModal
+        open={!!selectedTicket}
+        onOpenChange={(open) => !open && setSelectedTicket(null)}
+        ticket={selectedTicket?.ticket || null}
+        email={selectedTicket?.email || ''}
+      />
+    </>
   );
 }

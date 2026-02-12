@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Allow multiple Internet Identity principals to be granted admin access and manage that allowlist from the admin panel.
+**Goal:** Let admins fully read long customer messages in the Quote Forms table without expanding the table layout.
 
 **Planned changes:**
-- Update backend admin access control to support an allowlist of multiple admin principals (instead of implicitly treating the first authenticated principal as the only admin).
-- Add backend admin-management endpoints to (1) list current admin principals and (2) add a new admin principal, restricted to existing admins.
-- Update the admin panel UI to display the current admin principal list and provide a simple form to add another principal, with clear success/error handling.
-- Improve admin access-gate messaging to clearly differentiate “not logged in” vs “logged in but not an accepted admin,” using English user-facing text.
+- Update the Quote Forms table in `frontend/src/components/AdminQuoteFormsSection.tsx` to keep a short message preview in the table while adding an explicit interaction to view the full message (e.g., click action or “View full” control).
+- Add a full-message view (dialog or drawer) that shows the complete `ticket.formData.message` with preserved line breaks/paragraphs and scrolling for very long text.
+- Ensure the existing “Mark Complete / Mark Pending” action continues to work unchanged and is not interfered with by the new message-viewing interaction.
 
-**User-visible outcome:** Admins can view and add accepted Internet Identity principals for admin access; non-admin users see clear guidance depending on whether they are unauthenticated or simply not authorized.
+**User-visible outcome:** In the admin Quote Forms view, admins can open and read the entire customer message (including line breaks) for any ticket, even when the table preview is truncated.

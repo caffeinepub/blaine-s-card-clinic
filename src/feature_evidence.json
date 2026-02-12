@@ -2,12 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-expose-a-simple-ui-in-the-existing-admin-panel-to-manage-accepted-internet-identity-accounts-display-the-current-list-of-accepted-admin-principals-and-provide-a-form-to-add-another-principal",
-      "featureTitle": "Expose a simple UI in the existing admin panel to manage accepted Internet Identity accounts: display the current list of accepted admin principals and provide a form to add another principal.",
+      "featureId": "feature-update-the-admin-panel-quote-forms-table-so-long-customer-messages-are-fully-viewable-not-truncated-keep-the-table-compact-but-provide-an-explicit-interaction-to-read-the-entire-message-for-any-ticket-e-g-click-the-message-cell-or-a-view-full-action-that-opens-a-dialog-drawer-showing-the-full-text-with-preserved-line-breaks-and-scroll-when-needed",
+      "featureTitle": "Update the admin panel Quote Forms table so long customer messages are fully viewable (not truncated). Keep the table compact, but provide an explicit interaction to read the entire message for any ticket (e.g., click the message cell or a \"View full\" action that opens a dialog/drawer showing the full text with preserved line breaks and scroll when needed).",
       "files": [
-        "frontend/src/components/AdminOrderManagementSection.tsx",
-        "frontend/src/components/AdminPrincipalManagementSection.tsx",
-        "frontend/src/hooks/useAdminAllowlistQueries.ts"
+        "frontend/src/components/AdminQuoteFormsSection.tsx",
+        "frontend/src/components/FullTicketMessageModal.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -18,27 +17,7 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-6"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-ensure-the-admin-access-gate-ux-clearly-distinguishes-between-a-not-being-logged-in-with-internet-identity-and-b-being-logged-in-but-not-being-an-accepted-admin-principal-using-english-user-facing-text",
-      "featureTitle": "Ensure the admin access gate UX clearly distinguishes between (a) not being logged in with Internet Identity and (b) being logged in but not being an accepted admin principal, using English user-facing text.",
-      "files": [
-        "frontend/src/components/AccessDeniedScreen.tsx",
-        "frontend/src/components/AdminOrderManagementSection.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-7"
+        "REQ-1"
       ],
       "confidence": "high"
     }

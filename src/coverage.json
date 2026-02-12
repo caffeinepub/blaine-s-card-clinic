@@ -1,74 +1,37 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-12T19:32:28.299Z",
+  "generatedAt": "2026-02-12T20:53:48.014Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 2,
+    "total": 1,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-4",
-        "summary": "Update backend access control so more than one Internet Identity principal can be granted admin access (i.e., multiple accepted accounts can pass the admin permission check), rather than only the first authenticated principal implicitly becoming the only admin.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Add backend admin-management endpoints to: (1) list currently accepted admin principals, and (2) add an additional admin principal, restricted so that only existing admins can manage the admin allowlist.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Expose a simple UI in the existing admin panel to manage accepted Internet Identity accounts: display the current list of accepted admin principals and provide a form to add another principal.",
+        "id": "REQ-1",
+        "summary": "Update the admin panel Quote Forms table so long customer messages are fully viewable (not truncated). Keep the table compact, but provide an explicit interaction to read the entire message for any ticket (e.g., click the message cell or a \"View full\" action that opens a dialog/drawer showing the full text with preserved line breaks and scroll when needed).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useAdminAllowlistQueries.ts",
-          "frontend/src/components/AdminPrincipalManagementSection.tsx",
-          "frontend/src/components/AdminOrderManagementSection.tsx"
+          "frontend/src/components/FullTicketMessageModal.tsx",
+          "frontend/src/components/AdminQuoteFormsSection.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useAdminAllowlistQueries.ts",
-          "frontend/src/components/AdminPrincipalManagementSection.tsx",
-          "frontend/src/components/AdminOrderManagementSection.tsx"
-        ]
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Ensure the admin access gate UX clearly distinguishes between (a) not being logged in with Internet Identity and (b) being logged in but not being an accepted admin principal, using English user-facing text.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/AccessDeniedScreen.tsx",
-          "frontend/src/components/AdminOrderManagementSection.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/AccessDeniedScreen.tsx",
-          "frontend/src/components/AdminOrderManagementSection.tsx"
+          "frontend/src/components/FullTicketMessageModal.tsx",
+          "frontend/src/components/AdminQuoteFormsSection.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/AccessDeniedScreen.tsx",
-    "frontend/src/components/AdminOrderManagementSection.tsx",
-    "frontend/src/components/AdminPrincipalManagementSection.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useAdminAllowlistQueries.ts",
+    "frontend/src/components/AdminQuoteFormsSection.tsx",
+    "frontend/src/components/FullTicketMessageModal.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

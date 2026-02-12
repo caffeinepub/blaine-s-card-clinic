@@ -9,9 +9,9 @@ import Principal "mo:core/Principal";
 
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-import Migration "migration"; // separate migration module
+ // separate migration module
 
-(with migration = Migration.run)
+
 actor {
   var initialized = false; // Persistent initialization flag
   let adminIds = Set.empty<Principal>();

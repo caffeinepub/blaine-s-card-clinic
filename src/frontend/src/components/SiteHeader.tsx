@@ -3,17 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Menu, X, Shield } from 'lucide-react';
 import { assetUrl } from '@/lib/assetUrl';
 import { LoginButton } from './LoginButton';
-import { useCheckIsAdmin } from '@/hooks/useAdminOrderQueries';
-import { useInternetIdentity } from '@/hooks/useInternetIdentity';
+import { useAdminGate } from '@/context/AdminGateContext';
 
 export function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { identity } = useInternetIdentity();
-  const { data: isAdmin } = useCheckIsAdmin();
-
-  const isAuthenticated = !!identity;
-  const showAdminLink = isAuthenticated && isAdmin;
+  const { isUnlocked, openPrompt } = useAdminGate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,6 +29,14 @@ export function SiteHeader() {
         behavior: 'smooth'
       });
       setIsMobileMenuOpen(false);
+    }
+  };
+
+  const handleAdminClick = () => {
+    if (isUnlocked) {
+      scrollToSection('admin');
+    } else {
+      openPrompt();
     }
   };
 
@@ -87,16 +90,14 @@ export function SiteHeader() {
             >
               Pricing
             </Button>
-            {showAdminLink && (
-              <Button
-                variant="ghost"
-                onClick={() => scrollToSection('admin')}
-                className="text-foreground hover:text-primary"
-              >
-                <Shield className="h-4 w-4 mr-2" />
-                Admin
-              </Button>
-            )}
+            <Button
+              variant="ghost"
+              onClick={handleAdminClick}
+              className="text-foreground hover:text-primary"
+            >
+              <Shield className="h-4 w-4 mr-2" />
+              Admin
+            </Button>
             <Button
               onClick={() => scrollToSection('contact')}
               className="ml-2 bg-primary text-primary-foreground hover:bg-primary/90"
@@ -141,16 +142,14 @@ export function SiteHeader() {
               >
                 Pricing
               </Button>
-              {showAdminLink && (
-                <Button
-                  variant="ghost"
-                  onClick={() => scrollToSection('admin')}
-                  className="justify-start text-foreground hover:text-primary"
-                >
-                  <Shield className="h-4 w-4 mr-2" />
-                  Admin
-                </Button>
-              )}
+              <Button
+                variant="ghost"
+                onClick={handleAdminClick}
+                className="justify-start text-foreground hover:text-primary"
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                Admin
+              </Button>
               <Button
                 onClick={() => scrollToSection('contact')}
                 className="justify-start bg-primary text-primary-foreground hover:bg-primary/90"

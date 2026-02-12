@@ -1,4 +1,43 @@
 {
   "kind": "feature_evidence_report",
-  "features": []
+  "features": [
+    {
+      "featureId": "feature-hide-the-admin-panel-ui-by-default-and-only-reveal-it-after-the-user-clicks-an-admin-quick-link-and-successfully-enters-the-password-ponytapower17",
+      "featureTitle": "Hide the admin panel UI by default and only reveal it after the user clicks an \"Admin\" quick link and successfully enters the password \"PonytaPower17!\".",
+      "files": [
+        "frontend/src/context/AdminGateContext.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-an-admin-quick-link-in-the-site-footer-quick-links-list-that-triggers-the-same-admin-unlock-flow-as-the-header-admin-button-open-password-prompt-when-locked-scroll-to-admin-section-when-unlocked",
+      "featureTitle": "Add an \"Admin\" quick link in the site footer Quick Links list that triggers the same admin unlock flow as the header Admin button (open password prompt when locked; scroll to admin section when unlocked).",
+      "files": [
+        "frontend/src/components/SiteFooter.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    }
+  ]
 }

@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useActor } from './useActor';
+import { useAdminActor } from './useAdminActor';
 import { OrderStatus } from '../backend';
 
 export function useCreateOrder() {
-  const { actor } = useActor();
+  const { actor } = useAdminActor();
   const queryClient = useQueryClient();
 
   return useMutation<OrderStatus, Error, string>({
@@ -17,9 +17,9 @@ export function useCreateOrder() {
         return status;
       } catch (error: any) {
         if (error.message?.includes('Unauthorized')) {
-          throw new Error('You do not have permission to create orders. Please log in as an administrator.');
+          throw new Error('You do not have permission to create orders. Please contact an administrator.');
         }
-        throw new Error('Failed to create order. Please try again.');
+        throw new Error(error.message || 'Failed to create order');
       }
     },
     onSuccess: () => {
@@ -29,7 +29,7 @@ export function useCreateOrder() {
 }
 
 export function useUpdateOrderStatus() {
-  const { actor } = useActor();
+  const { actor } = useAdminActor();
   const queryClient = useQueryClient();
 
   return useMutation<OrderStatus, Error, { trackingNumber: string; newStatus: OrderStatus }>({
@@ -43,12 +43,12 @@ export function useUpdateOrderStatus() {
         return status;
       } catch (error: any) {
         if (error.message?.includes('Unauthorized')) {
-          throw new Error('You do not have permission to update order status. Please log in as an administrator.');
+          throw new Error('You do not have permission to update order status. Please contact an administrator.');
         }
         if (error.message?.includes('not found')) {
-          throw new Error('Order not found. Please check the tracking number and try again.');
+          throw new Error('Order not found. Please check the tracking number.');
         }
-        throw new Error('Failed to update order status. Please try again.');
+        throw new Error(error.message || 'Failed to update order status');
       }
     },
     onSuccess: () => {
@@ -58,13 +58,13 @@ export function useUpdateOrderStatus() {
 }
 
 export function useGetAllOrders() {
-  const { actor, isFetching: actorFetching } = useActor();
+  const { actor, isFetching: actorFetching } = useAdminActor();
 
-  return useQuery<Array<[string, OrderStatus]>>({
+  return useQuery<Array<[string, OrderStatus]>, Error>({
     queryKey: ['orders'],
     queryFn: async () => {
       if (!actor) {
-        throw new Error('Unable to connect to the service. Please try again later.');
+        throw new Error('Unable to connect to the service');
       }
 
       try {
@@ -72,9 +72,9 @@ export function useGetAllOrders() {
         return orders;
       } catch (error: any) {
         if (error.message?.includes('Unauthorized')) {
-          throw new Error('You do not have permission to view orders. Please log in as an administrator.');
+          throw new Error('You do not have permission to view orders');
         }
-        throw new Error('Failed to retrieve orders. Please try again.');
+        throw new Error(error.message || 'Failed to fetch orders');
       }
     },
     enabled: !!actor && !actorFetching,
@@ -83,21 +83,56 @@ export function useGetAllOrders() {
 }
 
 export function useCheckIsAdmin() {
-  const { actor, isFetching: actorFetching } = useActor();
+  const { actor, isFetching: actorFetching } = useAdminActor();
 
-  return useQuery<boolean>({
+  return useQuery<boolean, Error>({
     queryKey: ['isAdmin'],
     queryFn: async () => {
-      if (!actor) return false;
+      if (!actor) {
+        return false;
+      }
 
       try {
         const isAdmin = await actor.isCallerAdmin();
         return isAdmin;
-      } catch (error) {
+      } catch (error: any) {
+        console.error('Admin check error:', error);
         return false;
       }
     },
     enabled: !!actor && !actorFetching,
     retry: false,
+    staleTime: 30000, // Cache for 30 seconds
+  });
+}
+
+export function useInitializeAccessControl() {
+  const { actor } = useAdminActor();
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, void>({
+    mutationFn: async () => {
+      if (!actor) {
+        throw new Error('Unable to connect to the service. Please try again later.');
+      }
+
+      try {
+        await actor.initializeAccessControl();
+      } catch (error: any) {
+        if (error.message?.includes('anonymous')) {
+          throw new Error('Please log in to initialize admin access');
+        }
+        // If already initialized, this is not an error
+        if (error.message?.includes('Already initialized') || error.message?.includes('already')) {
+          return;
+        }
+        throw new Error(error.message || 'Failed to initialize access control');
+      }
+    },
+    onSuccess: () => {
+      // Invalidate admin status and diagnostics after initialization
+      queryClient.invalidateQueries({ queryKey: ['isAdmin'] });
+      queryClient.invalidateQueries({ queryKey: ['adminDiagnostics'] });
+    },
   });
 }

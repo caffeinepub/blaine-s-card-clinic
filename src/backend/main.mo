@@ -1,19 +1,18 @@
 import Set "mo:core/Set";
 import Map "mo:core/Map";
 import Text "mo:core/Text";
-import Runtime "mo:core/Runtime";
 import Time "mo:core/Time";
 import List "mo:core/List";
 import Array "mo:core/Array";
+import Runtime "mo:core/Runtime";
 import Principal "mo:core/Principal";
-
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
 actor {
-  transient var initialized = false;
+  var initialized = false; // Persistent initialization flag
 
-  // Initialize the access control system
+  // Initialize the user system state
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
@@ -24,12 +23,35 @@ actor {
 
   let userProfiles = Map.empty<Principal, UserProfile>();
 
-  // Helper function to auto-initialize first admin
-  func ensureInitialized(caller : Principal) {
-    if (not initialized and not caller.isAnonymous()) {
-      // Provide all four required arguments; admin token/user-provided token unused.
-      AccessControl.initialize(accessControlState, caller, "unused", "unused");
-      initialized := true;
+  // Initialize access control - first non-anonymous caller becomes admin
+  // Idempotent: safe to call multiple times, never revokes existing admin
+  public shared ({ caller }) func initializeAccessControl() : async () {
+    if (caller.isAnonymous()) {
+      Runtime.trap("Cannot initialize with anonymous principal");
+    };
+    if (initialized) {
+      return; // Already initialized, safe to call again
+    };
+    AccessControl.initialize(accessControlState, caller, "unused", "unused");
+    initialized := true;
+  };
+
+  // Diagnostics endpoint - returns initialization status
+  public query ({ caller }) func getInitializationStatus() : async {
+    isInitialized : Bool;
+    callerIsAdmin : Bool;
+    callerRole : Text;
+  } {
+    let role = AccessControl.getUserRole(accessControlState, caller);
+    let roleText = switch (role) {
+      case (#admin) { "admin" };
+      case (#user) { "user" };
+      case (#guest) { "guest" };
+    };
+    {
+      isInitialized = initialized;
+      callerIsAdmin = AccessControl.isAdmin(accessControlState, caller);
+      callerRole = roleText;
     };
   };
 
@@ -48,20 +70,10 @@ actor {
   };
 
   public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
-    ensureInitialized(caller);
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can save profiles");
     };
     userProfiles.add(caller, profile);
-  };
-
-  public shared ({ caller }) func bootstrap() : async () {
-    if (initialized) {
-      Runtime.trap("Already initialized. This method should only be called once on deployment");
-    };
-    // Provide all four required arguments; admin token/user-provided token unused.
-    AccessControl.initialize(accessControlState, caller, "unused", "unused");
-    initialized := true;
   };
 
   type FormData = {
@@ -80,7 +92,6 @@ actor {
 
   // Public - anyone can submit a contact form
   public shared ({ caller }) func submitContactForm(name : Text, email : Text, message : Text) : async () {
-    ensureInitialized(caller);
     let ticket : Ticket = {
       formData = {
         name;
@@ -95,7 +106,6 @@ actor {
 
   // Admin only - updating ticket status is internal operation
   public shared ({ caller }) func updateTicketStatus(email : Text, completed : Bool) : async () {
-    ensureInitialized(caller);
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can update ticket status");
     };
@@ -123,7 +133,6 @@ actor {
 
   // Admin only - categorization is internal operation
   public shared ({ caller }) func addCategory(email : Text, category : Text) : async () {
-    ensureInitialized(caller);
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can add categories");
     };
@@ -139,7 +148,6 @@ actor {
 
   // Admin only - categorization is internal operation
   public shared ({ caller }) func addCategories(email : Text, catArray : [Text]) : async () {
-    ensureInitialized(caller);
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can add categories");
     };
@@ -156,6 +164,14 @@ actor {
         Runtime.trap("Ticket not found");
       };
     };
+  };
+
+  // Admin only: New backend endpoint for listing tickets
+  public query ({ caller }) func listAllTickets() : async [(Text, Ticket)] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can list tickets");
+    };
+    tickets.toArray();
   };
 
   // Tracking RESTORATION process -----------
@@ -197,7 +213,6 @@ actor {
 
   // Admin only - creating tracking entries is internal operation
   public shared ({ caller }) func createTrackingState(trackingCode : Text, restorationLevel : Text) : async () {
-    ensureInitialized(caller);
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can create tracking states");
     };
@@ -214,7 +229,6 @@ actor {
 
   // Admin only - marking arrival is internal operation
   public shared ({ caller }) func markPackageArrived(trackingCode : Text) : async () {
-    ensureInitialized(caller);
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can mark packages as arrived");
     };
@@ -230,7 +244,6 @@ actor {
 
   // Admin only - adding restoration steps is internal operation
   public shared ({ caller }) func addRestorationStep(trackingCode : Text, description : Text) : async () {
-    ensureInitialized(caller);
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can add restoration steps");
     };
@@ -252,7 +265,6 @@ actor {
 
   // Admin only - completing restoration steps is internal operation
   public shared ({ caller }) func completeRestorationStep(trackingCode : Text, index : Nat) : async () {
-    ensureInitialized(caller);
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can complete restoration steps");
     };
@@ -289,7 +301,6 @@ actor {
 
   // Admin only - marking shipped is internal operation
   public shared ({ caller }) func markShipped(trackingCode : Text) : async () {
-    ensureInitialized(caller);
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can mark packages as shipped");
     };
@@ -335,7 +346,6 @@ actor {
 
   // Public - anyone can create an order with a tracking number
   public shared ({ caller }) func createOrder(trackingNumber : Text) : async OrderStatus {
-    ensureInitialized(caller);
     let order : Order = {
       trackingNumber;
       status = #processing;
@@ -374,7 +384,6 @@ actor {
 
   // Admin only - update order status
   public shared ({ caller }) func updateTrackingNumberStatus(trackingNumber : Text, newStatus : OrderStatus) : async OrderStatus {
-    ensureInitialized(caller);
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can update order status");
     };

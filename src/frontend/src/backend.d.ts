@@ -7,12 +7,22 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
+export type Time = bigint;
 export interface RestorationStep {
     completed: boolean;
     description: string;
     timestamp: Time;
 }
-export type Time = bigint;
+export interface FormData {
+    name: string;
+    email: string;
+    message: string;
+}
+export interface Ticket {
+    completed: boolean;
+    formData: FormData;
+    category: string;
+}
 export interface UserProfile {
     name: string;
     email: string;
@@ -40,7 +50,6 @@ export interface backendInterface {
     addCategory(email: string, category: string): Promise<void>;
     addRestorationStep(trackingCode: string, description: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    bootstrap(): Promise<void>;
     checkTrackingNumberStatus(trackingNumber: string): Promise<OrderStatus>;
     completeRestorationStep(trackingCode: string, index: bigint): Promise<void>;
     createOrder(trackingNumber: string): Promise<OrderStatus>;
@@ -48,11 +57,18 @@ export interface backendInterface {
     examineTrackingNumbers(): Promise<Array<[string, OrderStatus]>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getInitializationStatus(): Promise<{
+        callerRole: string;
+        isInitialized: boolean;
+        callerIsAdmin: boolean;
+    }>;
     getTrackingNumbers(): Promise<Array<[string, OrderStatus]>>;
     getTrackingState(trackingCode: string): Promise<TrackingStateView | null>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
+    initializeAccessControl(): Promise<void>;
     isCallerAdmin(): Promise<boolean>;
     isTicketCompleted(email: string): Promise<boolean>;
+    listAllTickets(): Promise<Array<[string, Ticket]>>;
     markPackageArrived(trackingCode: string): Promise<void>;
     markShipped(trackingCode: string): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;

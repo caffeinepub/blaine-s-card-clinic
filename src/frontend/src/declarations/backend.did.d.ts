@@ -10,6 +10,11 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface FormData {
+  'name' : string,
+  'email' : string,
+  'message' : string,
+}
 export type OrderStatus = { 'shipped' : null } |
   { 'delivered' : null } |
   { 'processing' : null };
@@ -17,6 +22,11 @@ export interface RestorationStep {
   'completed' : boolean,
   'description' : string,
   'timestamp' : Time,
+}
+export interface Ticket {
+  'completed' : boolean,
+  'formData' : FormData,
+  'category' : string,
 }
 export type Time = bigint;
 export interface TrackingStateView {
@@ -37,7 +47,6 @@ export interface _SERVICE {
   'addCategory' : ActorMethod<[string, string], undefined>,
   'addRestorationStep' : ActorMethod<[string, string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
-  'bootstrap' : ActorMethod<[], undefined>,
   'checkTrackingNumberStatus' : ActorMethod<[string], OrderStatus>,
   'completeRestorationStep' : ActorMethod<[string, bigint], undefined>,
   'createOrder' : ActorMethod<[string], OrderStatus>,
@@ -45,11 +54,21 @@ export interface _SERVICE {
   'examineTrackingNumbers' : ActorMethod<[], Array<[string, OrderStatus]>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getInitializationStatus' : ActorMethod<
+    [],
+    {
+      'callerRole' : string,
+      'isInitialized' : boolean,
+      'callerIsAdmin' : boolean,
+    }
+  >,
   'getTrackingNumbers' : ActorMethod<[], Array<[string, OrderStatus]>>,
   'getTrackingState' : ActorMethod<[string], [] | [TrackingStateView]>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'initializeAccessControl' : ActorMethod<[], undefined>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'isTicketCompleted' : ActorMethod<[string], boolean>,
+  'listAllTickets' : ActorMethod<[], Array<[string, Ticket]>>,
   'markPackageArrived' : ActorMethod<[string], undefined>,
   'markShipped' : ActorMethod<[string], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,

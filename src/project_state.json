@@ -1,30 +1,54 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Web app with order-tracking and an admin dashboard gated by Internet Identity-based admin access control.",
+  "summary": "Build an application with a password-protected admin panel accessible via an admin quick link, and include visibility of quote requests within the admin panel.",
   "architectural_notes": [
-    "Admin area access is gated by Internet Identity login plus a backend-maintained admin allowlist; non-admins see \"Access Denied\"."
+    "Admin panel must be gated behind an admin quick link and password authentication (do not display admin UI by default).",
+    "Avoid hardcoding passwords in client-side code; store secrets securely and authenticate server-side."
   ],
   "known_issues": [],
   "isFixRequest": false,
-  "existing_features": [],
+  "existing_features": [
+    {
+      "id": "feature-hide-the-admin-panel-ui-by-default-and-only-reveal-it-after-the-user-clicks-an-admin-quick-link-and-successfully-enters-the-password-ponytapower17",
+      "title": "Hide the admin panel UI by default and only reveal it after the user clicks an \"Admin\" quick link and successfully enters the password \"PonytaPower17!\".",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-admin-quick-link-in-the-site-footer-quick-links-list-that-triggers-the-same-admin-unlock-flow-as-the-header-admin-button-open-password-prompt-when-locked-scroll-to-admin-section-when-unlocked",
+      "title": "Add an \"Admin\" quick link in the site footer Quick Links list that triggers the same admin unlock flow as the header Admin button (open password prompt when locked; scroll to admin section when unlocked).",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    }
+  ],
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add the user's current Internet Identity as an admin so they can access the admin area/dashboard.",
+      "summary": "Hide admin panel by default; only show it after clicking an admin quick link and entering a password.",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Update the Motoko backend to automatically grant the caller administrative permissions the first time they authenticate, so the user’s current Internet Identity can access the admin dashboard without any manual principal entry.",
+      "summary": "Add quote request visibility/listing within the admin panel.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Within the unlocked admin panel, ensure quote requests submitted via the public contact/quote form are visible in an admin \"Quote Forms\" / \"Quotes\" view.",
       "reqIds": [
-        "REQ-1"
+        "REQ-3"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Bootstrap current Internet Identity as an admin",
+  "projectName": "Gate admin panel behind quick link + password and ensure Quote Requests are visible in admin UI",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

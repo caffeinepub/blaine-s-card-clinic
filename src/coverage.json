@@ -1,20 +1,49 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T23:24:35.615Z",
+  "generatedAt": "2026-02-12T01:12:44.575Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
-    "implemented": 0,
+    "total": 3,
+    "implemented": 2,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Update the Motoko backend to automatically grant the caller administrative permissions the first time they authenticate, so the user’s current Internet Identity can access the admin dashboard without any manual principal entry.",
-        "status": "unknown",
-        "plannedFiles": [],
+        "summary": "Hide the admin panel UI by default and only reveal it after the user clicks an \"Admin\" quick link and successfully enters the password \"PonytaPower17!\".",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/context/AdminGateContext.tsx",
+          "frontend/src/components/AdminPasswordPromptModal.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/context/AdminGateContext.tsx"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Add an \"Admin\" quick link in the site footer Quick Links list that triggers the same admin unlock flow as the header Admin button (open password prompt when locked; scroll to admin section when unlocked).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/SiteFooter.tsx",
+          "frontend/src/components/SiteHeader.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/SiteFooter.tsx"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Within the unlocked admin panel, ensure quote requests submitted via the public contact/quote form are visible in an admin \"Quote Forms\" / \"Quotes\" view.",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/components/AdminOrderManagementSection.tsx",
+          "frontend/src/components/AdminQuoteFormsSection.tsx",
+          "frontend/src/hooks/useAdminTicketQueries.ts"
+        ],
         "matchedFiles": []
       }
     ]
@@ -25,10 +54,8 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
+    "frontend/src/components/SiteFooter.tsx",
+    "frontend/src/context/AdminGateContext.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

@@ -4,9 +4,13 @@ import { ServiceTiersSection } from './components/ServiceTiersSection';
 import { TrackPackageSection } from './components/TrackPackageSection';
 import { ContactFormSection } from './components/ContactFormSection';
 import { AdminOrderManagementSection } from './components/AdminOrderManagementSection';
+import { AdminPasswordPromptModal } from './components/AdminPasswordPromptModal';
 import { SiteFooter } from './components/SiteFooter';
+import { AdminGateProvider, useAdminGate } from './context/AdminGateContext';
 
-function App() {
+function AppContent() {
+  const { isUnlocked } = useAdminGate();
+
   return (
     <div className="min-h-screen flex flex-col">
       <SiteHeader />
@@ -15,10 +19,21 @@ function App() {
         <ServiceTiersSection />
         <ContactFormSection />
         <TrackPackageSection />
-        <AdminOrderManagementSection />
+        {/* Stable anchor for admin section */}
+        <div id="admin" />
+        {isUnlocked && <AdminOrderManagementSection />}
       </main>
       <SiteFooter />
+      <AdminPasswordPromptModal />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AdminGateProvider>
+      <AppContent />
+    </AdminGateProvider>
   );
 }
 

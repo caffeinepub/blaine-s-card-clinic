@@ -1,6 +1,83 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Bootstrap current Internet Identity as an admin (frontend-only)",
-  "requirements": []
+  "title": "UI-only admin gate + footer Admin quick link + visible Quote Requests in admin panel",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Hide admin panel content by default and unlock it only after clicking the Admin quick link and entering the correct password, without persisting unlock across refresh.",
+      "acceptanceCriteria": [
+        "On initial page load, the admin panel content (AdminOrderManagementSection) is not rendered anywhere on the page.",
+        "Clicking the Admin quick link opens the admin password prompt modal.",
+        "Entering the exact password \"PonytaPower17!\" unlocks the admin panel and scrolls to the admin section.",
+        "Entering an incorrect password does not unlock the admin panel and shows an error message.",
+        "Refreshing the page does not automatically keep the admin panel unlocked (password must be entered again)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/context/AdminGateContext.tsx",
+          "operation": "modify",
+          "description": "Remove sessionStorage persistence for admin unlock (do not load/store 'admin_unlocked'); keep unlock state in-memory only so refresh always re-locks. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/AdminPasswordPromptModal.tsx",
+          "operation": "modify",
+          "description": "Ensure the password prompt modal continues to (1) validate only the exact hardcoded password \"PonytaPower17!\", (2) show an inline error on mismatch, and (3) unlock + smoothly scroll to the admin anchor after successful unlock. Keep using shadcn-ui Dialog primitives without modifying files under frontend/src/components/ui. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Confirm AdminOrderManagementSection is conditionally rendered only when the admin gate is unlocked, and keep a stable #admin anchor for scroll targeting. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Add an Admin quick link in the footer that shares the same unlock/scroll behavior as the header Admin button.",
+      "acceptanceCriteria": [
+        "The footer \"Quick Links\" section contains an \"Admin\" button/link.",
+        "When admin is locked, clicking the footer \"Admin\" quick link opens the password prompt modal.",
+        "When admin is already unlocked, clicking the footer \"Admin\" quick link scrolls smoothly to the admin section."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/SiteFooter.tsx",
+          "operation": "modify",
+          "description": "Add an \"Admin\" entry to the footer Quick Links list. Wire it to the AdminGateContext: when locked call openPrompt(); when unlocked scroll smoothly to the existing #admin anchor (match header behavior, including any offset handling you apply). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/SiteHeader.tsx",
+          "operation": "modify",
+          "description": "Refactor/align the admin click handler logic (if needed) so header Admin button and footer Admin quick link share the same behavior (prompt when locked; smooth scroll when unlocked). Keep using shadcn-ui Button without editing read-only UI component files. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "In the unlocked admin panel, provide a Quote Forms/Quotes view that lists submitted quote requests from the public form with a clear empty state and authorization-aware error handling.",
+      "acceptanceCriteria": [
+        "The admin panel includes a visible tab/section for quote requests (e.g., \"Quote Forms\" / \"Quotes\").",
+        "The quote requests view lists submitted tickets (name, email, message, category, status).",
+        "If there are no submitted tickets, the view shows an English empty state message.",
+        "The backend endpoint used to list tickets is admin-protected (rejects non-admin callers)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AdminOrderManagementSection.tsx",
+          "operation": "modify",
+          "description": "Ensure the admin panel Tabs includes a clearly labeled \"Quote Forms\"/\"Quotes\" tab and that its content renders AdminQuoteFormsSection when selected. Keep the admin-only gating/denial UX consistent with the authorization component’s role checks already used in the admin panel. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/AdminQuoteFormsSection.tsx",
+          "operation": "modify",
+          "description": "Verify the quotes list shows the required fields (name, email, message, category, status/completed) and retains an English empty state message when there are no tickets. Improve unauthorized/error messaging as needed to clearly reflect admin-only access (pairing with the authorization component behavior). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useAdminTicketQueries.ts",
+          "operation": "modify",
+          "description": "Harden admin ticket query/mutation error handling for authorization failures (admin-protected backend function calls) so the UI can display a clear, English permission error when non-admin callers attempt to list/update tickets. Verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
 }

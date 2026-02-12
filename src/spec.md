@@ -1,10 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Automatically bootstrap the first authenticated Internet Identity as an admin so the current user can access the admin dashboard without manually adding a principal.
+**Goal:** Hide the admin panel behind an “Admin” quick link + password prompt, and ensure submitted quote requests are visible inside the admin UI.
 
 **Planned changes:**
-- Update the Motoko backend to grant the caller admin permissions on first authentication under a safe bootstrap rule (e.g., only when no admin has been set yet / only once).
-- Ensure existing admin authorization checks remain enforced for non-admin callers across admin-gated endpoints.
+- Do not render the admin panel section on initial load; add an “Admin” unlock flow that shows a password modal and only reveals the admin panel after entering the exact password `PonytaPower17!`.
+- Add an “Admin” quick link to the footer Quick Links list that triggers the same unlock/scroll behavior as the existing header Admin control.
+- In the unlocked admin panel, add/ensure a “Quotes” (quote requests) view that lists submitted quote/contact form tickets and shows an empty state when none exist.
+- Ensure the backend endpoint used to list quote request tickets is admin-protected (rejects non-admin callers).
 
-**User-visible outcome:** After logging in with Internet Identity, the user can navigate to the admin section without seeing “Access Denied”, and admin-only actions (like listing orders or updating order status) work for that bootstrapped identity.
+**User-visible outcome:** Visitors won’t see the admin panel unless they click “Admin” and enter the correct password; admins can access the admin section from both header and footer, and can view submitted quote requests in the admin UI.

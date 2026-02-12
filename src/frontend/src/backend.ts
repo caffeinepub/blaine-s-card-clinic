@@ -89,12 +89,22 @@ export class ExternalBlob {
         return this;
     }
 }
+export type Time = bigint;
 export interface RestorationStep {
     completed: boolean;
     description: string;
     timestamp: Time;
 }
-export type Time = bigint;
+export interface FormData {
+    name: string;
+    email: string;
+    message: string;
+}
+export interface Ticket {
+    completed: boolean;
+    formData: FormData;
+    category: string;
+}
 export interface UserProfile {
     name: string;
     email: string;
@@ -123,7 +133,6 @@ export interface backendInterface {
     addCategory(email: string, category: string): Promise<void>;
     addRestorationStep(trackingCode: string, description: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    bootstrap(): Promise<void>;
     checkTrackingNumberStatus(trackingNumber: string): Promise<OrderStatus>;
     completeRestorationStep(trackingCode: string, index: bigint): Promise<void>;
     createOrder(trackingNumber: string): Promise<OrderStatus>;
@@ -131,11 +140,18 @@ export interface backendInterface {
     examineTrackingNumbers(): Promise<Array<[string, OrderStatus]>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getInitializationStatus(): Promise<{
+        callerRole: string;
+        isInitialized: boolean;
+        callerIsAdmin: boolean;
+    }>;
     getTrackingNumbers(): Promise<Array<[string, OrderStatus]>>;
     getTrackingState(trackingCode: string): Promise<TrackingStateView | null>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
+    initializeAccessControl(): Promise<void>;
     isCallerAdmin(): Promise<boolean>;
     isTicketCompleted(email: string): Promise<boolean>;
+    listAllTickets(): Promise<Array<[string, Ticket]>>;
     markPackageArrived(trackingCode: string): Promise<void>;
     markShipped(trackingCode: string): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
@@ -213,20 +229,6 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n1(this._uploadFile, this._downloadFile, arg1));
-            return result;
-        }
-    }
-    async bootstrap(): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.bootstrap();
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.bootstrap();
             return result;
         }
     }
@@ -328,6 +330,24 @@ export class Backend implements backendInterface {
             return from_candid_UserRole_n8(this._uploadFile, this._downloadFile, result);
         }
     }
+    async getInitializationStatus(): Promise<{
+        callerRole: string;
+        isInitialized: boolean;
+        callerIsAdmin: boolean;
+    }> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getInitializationStatus();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getInitializationStatus();
+            return result;
+        }
+    }
     async getTrackingNumbers(): Promise<Array<[string, OrderStatus]>> {
         if (this.processError) {
             try {
@@ -370,6 +390,20 @@ export class Backend implements backendInterface {
             return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
         }
     }
+    async initializeAccessControl(): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.initializeAccessControl();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.initializeAccessControl();
+            return result;
+        }
+    }
     async isCallerAdmin(): Promise<boolean> {
         if (this.processError) {
             try {
@@ -395,6 +429,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.isTicketCompleted(arg0);
+            return result;
+        }
+    }
+    async listAllTickets(): Promise<Array<[string, Ticket]>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.listAllTickets();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.listAllTickets();
             return result;
         }
     }

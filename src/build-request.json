@@ -1,36 +1,75 @@
 {
   "kind": "build_request",
-  "title": "Bootstrap current Internet Identity as an admin",
+  "title": "Gate admin panel behind quick link + password and ensure Quote Requests are visible in admin UI",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Update the Motoko backend to automatically grant the caller administrative permissions the first time they authenticate, so the user’s current Internet Identity can access the admin dashboard without any manual principal entry.",
-      "target": "backend",
+      "text": "Hide the admin panel UI by default and only reveal it after the user clicks an \"Admin\" quick link and successfully enters the password \"PonytaPower17!\".",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-messages"
+          "msg-3"
         ],
         "quotes": [
-          "Yes add me as an admin",
-          "If you want, I can make your current Internet Identity automatically added as an admin so you can enter the admin dashboard."
+          "Do not have the admin panel show until you click the admin quick link and put in the password PonytaPower17!"
         ]
       },
       "acceptanceCriteria": [
-        "When the user logs in with Internet Identity and then navigates to the admin section, the UI no longer shows “Access Denied”.",
-        "Backend admin-gated endpoints (e.g., listing orders / updating order status) succeed for that identity after the bootstrap grant.",
-        "The bootstrap behavior is safe against repeated use (e.g., only applies once, or only applies when no admin has been set yet), and does not allow arbitrary users to continually self-promote beyond the intended bootstrap rule.",
-        "The existing authorization checks continue to be enforced for non-admin callers."
+        "On initial page load, the admin panel content (AdminOrderManagementSection) is not rendered anywhere on the page.",
+        "Clicking the Admin quick link opens the admin password prompt modal.",
+        "Entering the exact password \"PonytaPower17!\" unlocks the admin panel and scrolls to the admin section.",
+        "Entering an incorrect password does not unlock the admin panel and shows an error message.",
+        "Refreshing the page does not automatically keep the admin panel unlocked (password must be entered again)."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Add an \"Admin\" quick link in the site footer Quick Links list that triggers the same admin unlock flow as the header Admin button (open password prompt when locked; scroll to admin section when unlocked).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-3"
+        ],
+        "quotes": [
+          "click the admin quick link"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The footer \"Quick Links\" section contains an \"Admin\" button/link.",
+        "When admin is locked, clicking the footer \"Admin\" quick link opens the password prompt modal.",
+        "When admin is already unlocked, clicking the footer \"Admin\" quick link scrolls smoothly to the admin section."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Within the unlocked admin panel, ensure quote requests submitted via the public contact/quote form are visible in an admin \"Quote Forms\" / \"Quotes\" view.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-3"
+        ],
+        "quotes": [
+          "In this admin panel, let the quote request be seen"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The admin panel includes a visible tab/section for quote requests (e.g., \"Quote Forms\" / \"Quotes\").",
+        "The quote requests view lists submitted tickets (name, email, message, category, status).",
+        "If there are no submitted tickets, the view shows an English empty state message.",
+        "The backend endpoint used to list tickets is admin-protected (rejects non-admin callers)."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in backend/main.mo.",
-    "Only generate backend/migration.mo if required to preserve/upgrade existing persisted state."
+    "Do not edit files under frontend/src/components/ui (read-only shadcn components).",
+    "Do not edit frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, or frontend/src/main.tsx (immutable paths).",
+    "Backend must remain a single Motoko actor in backend/main.mo; add migration.mo only if persistent state schema changes require it."
   ],
   "nonGoals": [
-    "Building a full admin user-management UI for adding/removing admins.",
-    "Adding third-party authentication providers (only Internet Identity is used)."
+    "Implementing secure server-side authentication based on the provided password (the password gate is UI-only).",
+    "Adding third-party authentication providers beyond Internet Identity.",
+    "Adding real-time updates or push notifications for quote requests."
   ],
   "imageRequirements": {
     "required": [],

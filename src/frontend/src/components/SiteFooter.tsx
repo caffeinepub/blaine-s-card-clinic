@@ -1,12 +1,36 @@
 import { SiTiktok, SiFacebook, SiInstagram } from 'react-icons/si';
-import { Heart } from 'lucide-react';
+import { Heart, Shield } from 'lucide-react';
 import { assetUrl } from '@/lib/assetUrl';
+import { useAdminGate } from '@/context/AdminGateContext';
 
 export function SiteFooter() {
   const currentYear = new Date().getFullYear();
   const appIdentifier = typeof window !== 'undefined' 
     ? encodeURIComponent(window.location.hostname)
     : 'blaines-card-clinic';
+  
+  const { isUnlocked, openPrompt } = useAdminGate();
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const handleAdminClick = () => {
+    if (isUnlocked) {
+      scrollToSection('admin');
+    } else {
+      openPrompt();
+    }
+  };
 
   return (
     <footer className="bg-muted/30 border-t">
@@ -73,6 +97,15 @@ export function SiteFooter() {
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Contact
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={handleAdminClick}
+                  className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                >
+                  <Shield className="h-3 w-3" />
+                  Admin
                 </button>
               </li>
             </ul>

@@ -36,6 +36,16 @@ export const TrackingStateView = IDL.Record({
   'steps' : IDL.Vec(RestorationStep),
   'shippingTimestamp' : IDL.Opt(Time),
 });
+export const FormData = IDL.Record({
+  'name' : IDL.Text,
+  'email' : IDL.Text,
+  'message' : IDL.Text,
+});
+export const Ticket = IDL.Record({
+  'completed' : IDL.Bool,
+  'formData' : FormData,
+  'category' : IDL.Text,
+});
 
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
@@ -43,7 +53,6 @@ export const idlService = IDL.Service({
   'addCategory' : IDL.Func([IDL.Text, IDL.Text], [], []),
   'addRestorationStep' : IDL.Func([IDL.Text, IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-  'bootstrap' : IDL.Func([], [], []),
   'checkTrackingNumberStatus' : IDL.Func([IDL.Text], [OrderStatus], ['query']),
   'completeRestorationStep' : IDL.Func([IDL.Text, IDL.Nat], [], []),
   'createOrder' : IDL.Func([IDL.Text], [OrderStatus], []),
@@ -55,6 +64,17 @@ export const idlService = IDL.Service({
     ),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getInitializationStatus' : IDL.Func(
+      [],
+      [
+        IDL.Record({
+          'callerRole' : IDL.Text,
+          'isInitialized' : IDL.Bool,
+          'callerIsAdmin' : IDL.Bool,
+        }),
+      ],
+      ['query'],
+    ),
   'getTrackingNumbers' : IDL.Func(
       [],
       [IDL.Vec(IDL.Tuple(IDL.Text, OrderStatus))],
@@ -70,8 +90,14 @@ export const idlService = IDL.Service({
       [IDL.Opt(UserProfile)],
       ['query'],
     ),
+  'initializeAccessControl' : IDL.Func([], [], []),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isTicketCompleted' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+  'listAllTickets' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(IDL.Text, Ticket))],
+      ['query'],
+    ),
   'markPackageArrived' : IDL.Func([IDL.Text], [], []),
   'markShipped' : IDL.Func([IDL.Text], [], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
@@ -112,6 +138,16 @@ export const idlFactory = ({ IDL }) => {
     'steps' : IDL.Vec(RestorationStep),
     'shippingTimestamp' : IDL.Opt(Time),
   });
+  const FormData = IDL.Record({
+    'name' : IDL.Text,
+    'email' : IDL.Text,
+    'message' : IDL.Text,
+  });
+  const Ticket = IDL.Record({
+    'completed' : IDL.Bool,
+    'formData' : FormData,
+    'category' : IDL.Text,
+  });
   
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
@@ -119,7 +155,6 @@ export const idlFactory = ({ IDL }) => {
     'addCategory' : IDL.Func([IDL.Text, IDL.Text], [], []),
     'addRestorationStep' : IDL.Func([IDL.Text, IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-    'bootstrap' : IDL.Func([], [], []),
     'checkTrackingNumberStatus' : IDL.Func(
         [IDL.Text],
         [OrderStatus],
@@ -135,6 +170,17 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getInitializationStatus' : IDL.Func(
+        [],
+        [
+          IDL.Record({
+            'callerRole' : IDL.Text,
+            'isInitialized' : IDL.Bool,
+            'callerIsAdmin' : IDL.Bool,
+          }),
+        ],
+        ['query'],
+      ),
     'getTrackingNumbers' : IDL.Func(
         [],
         [IDL.Vec(IDL.Tuple(IDL.Text, OrderStatus))],
@@ -150,8 +196,14 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Opt(UserProfile)],
         ['query'],
       ),
+    'initializeAccessControl' : IDL.Func([], [], []),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isTicketCompleted' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+    'listAllTickets' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Text, Ticket))],
+        ['query'],
+      ),
     'markPackageArrived' : IDL.Func([IDL.Text], [], []),
     'markShipped' : IDL.Func([IDL.Text], [], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
